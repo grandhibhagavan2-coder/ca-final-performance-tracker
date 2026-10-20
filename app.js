@@ -5,41 +5,42 @@ function escapeHtml(value) {
 // Data Manager Class
 class DataManager {
     constructor() {
-    this.storageKey = 'caFinalTrackerData';
-    this.data = this.loadData();
-}
-loadData() {
-    const stored = localStorage.getItem(this.storageKey);
-    if (stored) {
-        try {
-            const data = JSON.parse(stored);
-
-            // Repair old chapter values without resetting study progress.
-            ['AFM', 'Audit'].forEach(subject => {
-                const chapters = data.subjects?.[subject] || [];
-
-                chapters.forEach((item, index) => {
-                    if (
-                        typeof item.chapter === 'string' &&
-                        (item.chapter.startsWith('=') ||
-                         /^\d{4}-\d{2}-\d{2}/.test(item.chapter))
-                    ) {
-                        item.chapter = String(index + 1);
-                    }
-                });
-            });
-
-            localStorage.setItem(this.storageKey, JSON.stringify(data));
-            return data;
-        } catch (e) {
-            console.error("Saved tracker data is corrupted; refusing to overwrite it.", e);
-            alert("Saved tracker data could not be read. Restore your JSON backup before continuing.");
-            throw new Error("Corrupted saved tracker data");
-        }
+        this.storageKey = 'caFinalTrackerData';
+        this.data = this.loadData();
     }
 
-    return this.getDefaultData();
-}
+    loadData() {
+        const stored = localStorage.getItem(this.storageKey);
+        if (stored) {
+            try {
+                const data = JSON.parse(stored);
+
+                // Repair old chapter values without resetting study progress.
+                ['AFM', 'Audit'].forEach(subject => {
+                    const chapters = data.subjects?.[subject] || [];
+
+                    chapters.forEach((item, index) => {
+                        if (
+                            typeof item.chapter === 'string' &&
+                            (item.chapter.startsWith('=') ||
+                             /^\d{4}-\d{2}-\d{2}/.test(item.chapter))
+                        ) {
+                            item.chapter = String(index + 1);
+                        }
+                    });
+                });
+
+                localStorage.setItem(this.storageKey, JSON.stringify(data));
+                return data;
+            } catch (e) {
+                console.error("Saved tracker data is corrupted; refusing to overwrite it.", e);
+                alert("Saved tracker data could not be read. Restore your JSON backup before continuing.");
+                throw new Error("Corrupted saved tracker data");
+            }
+        }
+
+        return this.getDefaultData();
+    }
 
     getDefaultData() {
         // Deep copy of initialData from data.js
@@ -67,7 +68,7 @@ loadData() {
         this.data.studyLog.unshift({ id: Date.now(), ...entry });
         this.saveData();
     }
-    
+
     deleteStudyLog(id) {
         if (!this.data.studyLog) return;
         this.data.studyLog = this.data.studyLog.filter(log => log.id !== id);
@@ -92,16 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            // Update active link
             navLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
 
-            // Show target section
             const targetId = link.getAttribute('data-target');
-            
-            // Hide all sections first
+
             sections.forEach(sec => sec.classList.remove('active'));
-            document.getElementById('subject-views-container').innerHTML = ''; // Clear subject views
+            document.getElementById('subject-views-container').innerHTML = '';
 
             if (targetId.startsWith('subject-')) {
                 const subject = targetId.replace('subject-', '');
@@ -111,14 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (targetSection) targetSection.classList.add('active');
             }
 
-            // Always update data when changing tabs
             if (targetId === 'dashboard') renderDashboard();
             if (targetId === 'study-log') renderStudyLog();
             if (targetId === 'test-papers') renderTestPapers();
         });
     });
 
-    // Initial render
     renderDashboard();
     initSettings();
 });
@@ -161,10 +157,9 @@ function calculateStats() {
 
     const overallPct = totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
 
-    // Study Log stats
     let todayActual = 0;
     let weekActual = 0;
-    
+
     const logs = dm.data.studyLog || [];
     const today = new Date().toISOString().split('T')[0];
     const weekAgo = new Date();
@@ -190,33 +185,29 @@ function calculateStats() {
 function renderDashboard() {
     const stats = calculateStats();
 
-    // Overall Circle
     const circle = document.getElementById('overall-progress-circle');
     const text = document.getElementById('overall-progress-text');
     const pct = Math.round(stats.overallPct);
     circle.style.strokeDasharray = `${pct}, 100`;
     text.textContent = `${pct}%`;
 
-    // Hours
     document.getElementById('total-hours').textContent = Math.round(stats.totalDuration);
     document.getElementById('completed-hours').textContent = Math.round(stats.completedDuration);
     document.getElementById('remaining-hours').textContent = Math.round(stats.totalDuration - stats.completedDuration);
-    
+
     const hrPct = stats.totalDuration > 0 ? (stats.completedDuration / stats.totalDuration) * 100 : 0;
     document.getElementById('hours-progress-bar').style.width = `${hrPct}%`;
 
-    // Study Log Stats
     document.getElementById('today-actual').textContent = stats.todayActual.toFixed(1);
     document.getElementById('week-actual').textContent = stats.weekActual.toFixed(1);
 
-    // Subject Progress Grid
     const grid = document.getElementById('dashboard-subjects-grid');
     grid.innerHTML = '';
-    
+
     subjectsList.forEach(subject => {
         const subjStat = stats.subjectStats[subject];
         const pctVal = Math.round(subjStat.completionPct);
-        
+
         grid.innerHTML += `
             <div class="card">
                 <h4>${subject}</h4>
@@ -231,12 +222,9 @@ function renderDashboard() {
         `;
     });
 
-    // Countdown
     updateCountdown();
 }
-
 function updateCountdown() {
-    // Read user configured exam date or fallback to default May 1, 2027
     const userExamDate = dm.data.examDate || '2027-05-01T00:00:00';
     const examDate = new Date(userExamDate).getTime();
     const now = new Date().getTime();
@@ -269,7 +257,7 @@ function renderSubjectView(subject) {
                 <h1>${subject}</h1>
                 <p>Track your chapter-wise progress and revisions</p>
             </header>
-            
+
             <div class="subject-stats-bar">
                 <div class="subject-stat">
                     <div class="subject-stat-value">${Math.round(stats.completionPct)}%</div>
@@ -355,20 +343,17 @@ function renderSubjectView(subject) {
 
     container.innerHTML = html;
 
-    // Attach listeners
     container.querySelectorAll('.subj-select').forEach(el => {
         el.addEventListener('change', (e) => {
             const t = e.target;
             const subj = t.getAttribute('data-subj');
             const idx = t.getAttribute('data-idx');
             const field = t.getAttribute('data-field');
-            
+
             t.className = `status-select ${t.value === 'Completed' ? 'status-completed' : 'status-pending'} subj-select`;
-            
+
             dm.updateChapter(subj, idx, { [field]: t.value });
-            renderDashboard(); // Update stats implicitly
-            
-            // Re-render the subject view to update the top percentage bar dynamically
+            renderDashboard();
             renderSubjectView(subj);
         });
     });
@@ -379,39 +364,36 @@ function renderSubjectView(subject) {
             const subj = t.getAttribute('data-subj');
             const idx = t.getAttribute('data-idx');
             const field = t.getAttribute('data-field');
-            
+
             let val = t.value;
             if (field === 'lectures') val = parseFloat(val) || 0;
-            
+
             dm.updateChapter(subj, idx, { [field]: val });
             renderDashboard();
-            
+
             if (field === 'lectures') {
-                renderSubjectView(subj); // Re-render to update the top percentage bar dynamically
+                renderSubjectView(subj);
             }
         });
     });
 }
 
-
 // Settings and Data Management
 function initSettings() {
-    // Exam Date Setting
     const examDateInput = document.getElementById('settings-exam-date');
     if (examDateInput && dm.data.examDate) {
         examDateInput.value = dm.data.examDate.split('T')[0];
     }
-    
+
     document.getElementById('btn-save-exam-date').addEventListener('click', () => {
         if (examDateInput.value) {
             dm.data.examDate = examDateInput.value + 'T00:00:00';
             dm.saveData();
             alert("Exam date saved!");
-            renderDashboard(); // refresh countdown
+            renderDashboard();
         }
     });
 
-    // Export JSON
     document.getElementById('btn-export-json').addEventListener('click', () => {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dm.data, null, 2));
         const downloadAnchorNode = document.createElement('a');
@@ -422,13 +404,12 @@ function initSettings() {
         downloadAnchorNode.remove();
     });
 
-    // Import JSON
     document.getElementById('btn-import-json').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        
+
         if (!confirm("Are you sure you want to import this data? This will overwrite ALL your current progress and study logs on this browser.")) {
-            e.target.value = ''; // Reset input
+            e.target.value = '';
             return;
         }
 
@@ -447,19 +428,15 @@ function initSettings() {
             } catch (err) {
                 alert("Error reading file. Is it a valid JSON?");
             }
-            e.target.value = ''; // Reset input
+            e.target.value = '';
         };
         reader.readAsText(file);
     });
 
-    // Export CSV (Simple study log export as example)
     document.getElementById('btn-export-csv').addEventListener('click', () => {
         let csvContent = "data:text/csv;charset=utf-8,";
-        
-        // Header
         csvContent += "Date,Subject,Lecture Hours,Self Study Hours,Revision Hours,Questions,Notes\n";
-        
-        // Data
+
         const logs = dm.data.studyLog || [];
         logs.forEach(row => {
             const rowArr = [
@@ -469,11 +446,11 @@ function initSettings() {
                 row.selfStudyHours,
                 row.revisionHours,
                 row.questions,
-                `"${row.notes.replace(/"/g, '""')}"` // Escape quotes
+                `"${row.notes.replace(/"/g, '""')}"`
             ];
             csvContent += rowArr.join(",") + "\n";
         });
-        
+
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
@@ -483,7 +460,6 @@ function initSettings() {
         link.remove();
     });
 
-    // Reset Data
     document.getElementById('btn-reset-data').addEventListener('click', () => {
         if (confirm("Are you absolutely sure you want to delete all your progress and reset to the default initial data? This cannot be undone.")) {
             if (confirm("Final warning! Reset all data?")) {
@@ -494,7 +470,6 @@ function initSettings() {
         }
     });
 }
-
 // Study Log Logic
 document.getElementById('study-log-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -507,16 +482,15 @@ document.getElementById('study-log-form').addEventListener('submit', (e) => {
         questions: parseInt(document.getElementById('log-qs').value) || 0,
         notes: document.getElementById('log-notes').value
     };
-    
+
     dm.addStudyLog(entry);
-    
-    // Reset form partially
+
     document.getElementById('log-lecture').value = 0;
     document.getElementById('log-self').value = 0;
     document.getElementById('log-rev').value = 0;
     document.getElementById('log-qs').value = 0;
     document.getElementById('log-notes').value = '';
-    
+
     renderStudyLog();
     renderDashboard();
 });
@@ -524,7 +498,7 @@ document.getElementById('study-log-form').addEventListener('submit', (e) => {
 function renderStudyLog() {
     const tbody = document.querySelector('#study-log-table tbody');
     tbody.innerHTML = '';
-    
+
     const logs = dm.data.studyLog || [];
     logs.forEach(log => {
         const total = (log.lectureHours + log.selfStudyHours + log.revisionHours).toFixed(1);
@@ -542,12 +516,12 @@ function renderStudyLog() {
 }
 
 window.deleteStudyLog = function(id) {
-    if(confirm("Delete this log entry?")) {
+    if (confirm("Delete this log entry?")) {
         dm.deleteStudyLog(id);
         renderStudyLog();
         renderDashboard();
     }
-}
+};
 
 // Ensure today's date is set by default
 document.getElementById('log-date').valueAsDate = new Date();
@@ -558,16 +532,15 @@ document.getElementById('test-filter-subject').addEventListener('change', render
 function renderTestPapers() {
     const tbody = document.querySelector('#test-papers-table tbody');
     tbody.innerHTML = '';
-    
+
     const filter = document.getElementById('test-filter-subject').value;
-    
     let subjectsToRender = filter === 'All' ? subjectsList : [filter];
-    
+
     subjectsToRender.forEach(subj => {
         const papers = dm.data.testPapers[subj] || [];
         papers.forEach((p, idx) => {
             const pct = p.maxMarks > 0 ? ((p.marksObtained / p.maxMarks) * 100).toFixed(1) : 0;
-            
+
             tbody.innerHTML += `
                 <tr>
                     <td>${subj}</td>
@@ -588,16 +561,14 @@ function renderTestPapers() {
         });
     });
 
-    // Attach listeners
     document.querySelectorAll('.test-select').forEach(el => {
         el.addEventListener('change', (e) => {
             const t = e.target;
             const subj = t.getAttribute('data-subj');
             const idx = t.getAttribute('data-idx');
             const field = t.getAttribute('data-field');
-            
+
             t.className = `status-select ${t.value === 'Completed' ? 'status-completed' : 'status-pending'} test-select`;
-            
             dm.updateTestPaper(subj, idx, { [field]: t.value });
         });
     });
@@ -608,12 +579,15 @@ function renderTestPapers() {
             const subj = t.getAttribute('data-subj');
             const idx = t.getAttribute('data-idx');
             const field = t.getAttribute('data-field');
-            
+
             let val = t.value;
             if (field === 'marksObtained' || field === 'maxMarks') val = parseFloat(val) || 0;
-            
+
             dm.updateTestPaper(subj, idx, { [field]: val });
-            if (field === 'marksObtained' || field === 'maxMarks') renderTestPapers(); // Refresh for % update
+
+            if (field === 'marksObtained' || field === 'maxMarks') {
+                renderTestPapers();
+            }
         });
     });
 }
