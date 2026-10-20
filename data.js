@@ -2748,6 +2748,41 @@ initialData.subjects.AFM = [
     ["May 2026 Paper Solutions and Tough Paper Strategy — YouTube", 1, 3]
 ].map((x, i) => makeSyllabusChapter(i + 1, x[0], x[1], x[2]));
 
-// AUDIT: Keep the original chapter-wise lecture durations and structure
-// from initialData above. The day-wise planner does not provide reliable
-// per-topic lecture hours, so do not overwrite those durations with zero.
+// AUDIT — New syllabus topic groups based on the uploaded CA Final Audit planner.
+// Durations are summed from listed lecture videos where the planner provides them.
+// RAIC, Investigation and Digital Audit do not have durations in the planner.
+initialData.subjects.Audit = [
+    ["Basic", 6, 4.685],
+    ["SQC 1", 5, 5.077],
+    ["SA 250", 2, 2.042],
+    ["SA 260", 2, 2.266],
+    ["SA 299", 2, 1.774],
+    ["SA 240", 6, 5.847],
+    ["SA 550", 2, 2.033],
+    ["SA 500, SA 501, SA 505, SA 510 and SA 560", 8, 8.733],
+    ["SA 265 and Case Study", 3, 2.249],
+    ["SA 570 and SA 580", 5, 5.610],
+    ["SA 320, SA 530 and SA 450", 4, 4.900],
+    ["SA 700, SA 701, SA 705, SA 706, SA 710 and SA 720", 7, 8.647],
+    ["Company Audit", 1, 1.469],
+    ["CARO 2020", 4, 3.812],
+    ["Professional Ethics", 15, 22.533],
+    ["SA 620", 2, 1.821],
+    ["SA 540 and SA 402", 4, 3.917],
+    ["SAE 3402 and SA 520", 2, 1.634],
+    ["NBFC", 4, 3.730],
+    ["Group Audit and SA 600", 5, 4.140],
+    ["Internal Audit and SA 610", 4, 4.580],
+    ["SA 800, SA 805 and SA 810", 5, 6.384],
+    ["SRE 2400 and SRE 2410", 5, 4.370],
+    ["SAE 3400, SAE 3420, SRS 4400 and SRS 4410", 4, 4.840],
+    ["PSU Audit", 4, 4.320],
+    ["Due Diligence", 2, 1.810],
+    ["Forensic Audit", 2, 1.730],
+    ["ESG and ESG Case Study", 3, 2.760],
+    ["Audit Plan", 2, 2.090],
+    ["Bank Audit", 11, 9.500],
+    ["RAIC", 0, 0],
+    ["Investigation", 0, 0],
+    ["Digital Audit — 5 videos", 5, 0]
+].map((x, i) => makeSyllabusChapter(i + 1, x[0], x[1], x[2]));
