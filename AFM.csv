@@ -1,0 +1,23 @@
+﻿,AFM (Ritij),,,,,,,,,,,,,,,
+80,,,,,,,,,,,,,,,,
+, Input Sheet,,,,,,,,,,,CA Final | AFM ,,,,
+,,,,,,,,,,,,,,,,
+,,Total Lectures / Chapters,=SUM(AFM!$E$12:$E$23),1,=SUM(D12:D23),=COUNTA(AFM!$G$12:$G$23),=COUNTA(AFM!$H$12:$H$23),=COUNTA(AFM!$I$12:$I$23),=COUNTA(AFM!$J$12:$J$23),=COUNTA($K$12:$K$23),=COUNTA($L$12:$L$23),5,,Target,2027-06-30 00:00:00,
+,,Completed,"=SUMIF(AFM!$F$12:$F$23,""d"",AFM!$E$12:$E$23)",=D6/D5,"=SUMIF(F12:F23,""d"",D12:D23)","=COUNTIF(AFM!$G$12:$G$23,""d"")","=COUNTIF(AFM!$H$12:$H$23,""d"")","=COUNTIF(AFM!$I$12:$I$23,""d"")","=COUNTIF(AFM!$J$12:$J$23,""d"")","=COUNTIF($K$12:$K$23,""d"")","=COUNTIF($L$12:$L$23,""d"")",=AVERAGE(M12:M23),,Actual,,
+,,,,,,,,,,,,,,,,
+,"=IF(P6="""",""Buckle up Ritij! You have "" & (P5-TODAY()) & "" DAYS remaining."", ""Congratulations! You have completed this subject."")",,,,,,,,,,,,,,,
+,"=IF(P6="""",""To complete within time, you must study "" & TEXT((D5-D6)/(P5-TODAY())/P9,""h:mm"") & "" HOURS every day. (Assuming you watch at "" & TEXT(P9,""0.0"") & "")"",""Onto the next one now!"")",,,,,,,,,,,,,Watch Speed,1.5,
+,,,,,,,,,,,,,,,,
+,Sl No.,Topic,No. of Lectures,Duration (hh:mm),Lectures,Self Study,Revision-1,Revision-2,Revision-3,Revision-4,Final Exam Revision,Confidence Level (1-5),Expected Date of completion,Actual Date of completion,Difference,Notes to Yourself
+,1,Forex,11,"2 days, 3:33:00",U,U,U,U,U,U,U,,,,,"Early Delivery, Automatic Cancellation, TE / EE"
+,=B12+1,Advanced Capital Budgeting,13,"1 day, 5:33:00",U,U,U,U,U,U,U,,,,"=IF(O13<>"""",N13-O13,"""")",Hertz & Hillier
+,=B13+1,Derivative Analysis & Valuation,15,"2 days, 5:32:00",U,U,U,U,U,U,U,,,,"=IF(O14<>"""",N14-O14,"""")","Currency Futures & Options, Binomial Model, BSM, Real Options"
+,=B14+1,Portfolio Management,16,"1 day, 7:11:00",U,U,U,U,U,U,U,,,,"=IF(O15<>"""",N15-O15,"""")","Ambiguous Sums, Sharpe Optimisation"
+,=B15+1,Interest Rate Risk Management,4,22:20:00,U,U,U,U,U,U,U,,,,"=IF(O16<>"""",N16-O16,"""")","Swap Pricing, Swap Structuring"
+,=B16+1,Risk Management (RM),2,3:09:00,U,U,U,U,U,U,U,,,,"=IF(O17<>"""",N17-O17,"""")",VAR Back Calculation
+,=B17+1,Mutual Fund,5,10:19:00,U,U,U,U,U,U,U,,,,"=IF(O18<>"""",N18-O18,"""")","Performance Appraisal, Back Calculation"
+,=B18+1,Equity Valuation,14,"1 day, 8:37:00",U,U,U,U,U,U,U,,,,"=IF(O19<>"""",N19-O19,"""")","Expansion Schemes, FCFF Valuation"
+,=B19+1,Mergers & Acquisitions,7,14:29:00,U,U,U,U,U,U,U,,,,"=IF(O20<>"""",N20-O20,"""")",
+,=B20+1,Bond Valuation,16,"1 day, 7:19:00",U,U,U,U,U,U,U,,,,"=IF(O21<>"""",N21-O21,"""")",
+,=B21+1,Business Valuation,6,8:58:00,U,U,U,U,U,U,U,,,,"=IF(O22<>"""",N22-O22,"""")",
+,=B22+1,Theory,3,13:10:00,U,U,U,U,U,U,U,,,,"=IF(O23<>"""",N23-O23,"""")",

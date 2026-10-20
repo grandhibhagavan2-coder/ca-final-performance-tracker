@@ -1,0 +1,14 @@
+﻿,,,,,,,,,,,,,,,,,,,
+,Performance Analysis,,,,,,,,,,,,,,,,,,
+,"You won't always be motivated. So, stay disciplined and success is not far away!",,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,`,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,Progress,,Syllabus,,,,,,,Revision,,,,,,,Level of Confidence,,Mocks Given
+,Subject,Reference,Total Lectures,Lectures Completed,Total Duration,Duration Completed,% Completion,Self Study Done,,Total Chapters,Self Study,Rev-1,Rev-2,Rev-3,Rev-4,Final Exam,,,
+,FR,=FR!B1,=FR!F5,=FR!F6,=FR!D5,=FR!D6,=G8/F8,#ERROR!,,=FR!G5,=FR!G6,=FR!H6,=FR!I6,=FR!J6,=FR!K6,=FR!L6,=FR!M6,,='Test Papers'!E4
+,AFM,=AFM!B1,=AFM!F5,=AFM!F6,=AFM!D5,=AFM!D6,=G9/F9,,,=AFM!G5,=AFM!G6,=AFM!H6,=AFM!I6,=AFM!J6,=AFM!K6,=AFM!L6,=AFM!M6,,='Test Papers'!T4
+,Audit,=Audit!B1,=Audit!F5,=Audit!F6,=Audit!D5,=Audit!D6,=G10/F10,#ERROR!,,=Audit!G5,=Audit!G6,=Audit!H6,=Audit!I6,=Audit!J6,=Audit!K6,=Audit!L6,=Audit!M6,,='Test Papers'!O4
+,DT,=DT!B1,=DT!F5,=DT!F6,=DT!D5,=DT!D6,=G11/F11,,,=DT!G5,=DT!G6,=DT!H6,=DT!I6,=DT!J6,=DT!K6,=DT!L6,=DT!M6,,='Test Papers'!Y4
+,IDT,=IDT!B1,=IDT!F5,=IDT!F6,=IDT!D5,=IDT!D6,=G12/F12,,,=IDT!G5,=IDT!G6,=IDT!H6,=IDT!I6,=IDT!J6,=IDT!K6,=IDT!L6,=IDT!M6,,='Test Papers'!AD4
+,IBS,,,,,,,,,,,,,,,,"=SUMIF(#REF!,'Consolidated Progress'!B13,#REF!)",,
+,Total,,=SUM(D8:D13),=SUM(E8:E13),=SUM(F8:F13),=SUM(G8:G13),=SUM(H8:H13)/5,=SUM(I8:I13),,,,,,,,,,,
