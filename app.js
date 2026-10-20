@@ -66,6 +66,66 @@ class DataManager {
                     });
                 }
 
+                // Migrate the legacy 19-chapter Audit list to the planner's 33 topic groups.
+                // Keep saved statuses/revisions/notes and the source's verified lecture durations.
+                const savedAudit = data.subjects?.Audit || [];
+                const plannerAudit = initialData.subjects?.Audit || [];
+                const isLegacyAudit = savedAudit.length === 19 &&
+                    savedAudit.some(item => String(item.topic || '').includes('Ch 1: Quality Control')) &&
+                    plannerAudit.length === 33;
+
+                if (isLegacyAudit) {
+                    const mapping = [
+                        { old: /quality control/i, targets: ['SQC 1'] },
+                        { old: /general audit/i, targets: ['Basic'] },
+                        { old: /audit planning/i, targets: ['Audit Plan'] },
+                        { old: /risk assessment/i, targets: ['SA 320, SA 530 and SA 450'] },
+                        { old: /audit evidence/i, targets: ['SA 500, SA 501, SA 505, SA 510 and SA 560'] },
+                        { old: /completion/i, targets: ['SA 570 and SA 580'] },
+                        { old: /audit report|caro/i, targets: ['SA 700, SA 701, SA 705, SA 706, SA 710 and SA 720', 'CARO 2020'] },
+                        { old: /special areas/i, targets: ['PSU Audit', 'Due Diligence', 'Forensic Audit'] },
+                        { old: /related service/i, targets: ['SRE 2400 and SRE 2410', 'SAE 3400, SAE 3420, SRS 4400 and SRS 4410'] },
+                        { old: /review of fi/i, targets: ['SRE 2400 and SRE 2410'] },
+                        { old: /assurance service/i, targets: ['SAE 3402 and SA 520'] },
+                        { old: /digital audit/i, targets: ['Digital Audit — 5 videos'] },
+                        { old: /group audit/i, targets: ['Group Audit and SA 600'] },
+                        { old: /bank audit|nbfc/i, targets: ['Bank Audit', 'NBFC'] },
+                        { old: /psu audit/i, targets: ['PSU Audit'] },
+                        { old: /internal audit/i, targets: ['Internal Audit and SA 610'] },
+                        { old: /ddi|forensic/i, targets: ['Due Diligence', 'Forensic Audit'] },
+                        { old: /esg/i, targets: ['ESG and ESG Case Study'] },
+                        { old: /professional ethics/i, targets: ['Professional Ethics'] }
+                    ];
+
+                    const migratedAudit = plannerAudit.map((chapter, index) => ({
+                        ...chapter,
+                        chapter: String(index + 1),
+                        status: chapter.status || 'Pending',
+                        selfStudy: chapter.selfStudy || 'Pending',
+                        rev1: chapter.rev1 || 'Pending',
+                        rev2: chapter.rev2 || 'Pending',
+                        rev3: chapter.rev3 || 'Pending',
+                        notes: chapter.notes || ''
+                    }));
+
+                    savedAudit.forEach(oldChapter => {
+                        const rule = mapping.find(item => item.old.test(oldChapter.topic || ''));
+                        if (!rule) return;
+                        rule.targets.forEach(target => {
+                            const next = migratedAudit.find(item => item.topic === target);
+                            if (!next) return;
+                            if (oldChapter.status && oldChapter.status !== 'Pending') next.status = oldChapter.status;
+                            if (oldChapter.selfStudy && oldChapter.selfStudy !== 'Pending') next.selfStudy = oldChapter.selfStudy;
+                            if (oldChapter.rev1 && oldChapter.rev1 !== 'Pending') next.rev1 = oldChapter.rev1;
+                            if (oldChapter.rev2 && oldChapter.rev2 !== 'Pending') next.rev2 = oldChapter.rev2;
+                            if (oldChapter.rev3 && oldChapter.rev3 !== 'Pending') next.rev3 = oldChapter.rev3;
+                            if (oldChapter.notes) next.notes = oldChapter.notes;
+                        });
+                    });
+
+                    data.subjects.Audit = migratedAudit;
+                }
+
                 localStorage.setItem(this.storageKey, JSON.stringify(data));
                 return data;
             } catch (e) {
