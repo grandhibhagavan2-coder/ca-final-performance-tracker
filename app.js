@@ -5,9 +5,10 @@ function escapeHtml(value) {
 // Data Manager Class
 class DataManager {
     constructor() {
-        this.storageKey = 'caFinalTrackerData';
-        this.data = this.loadData();
-    loadData() {
+    this.storageKey = 'caFinalTrackerData';
+    this.data = this.loadData();
+}
+loadData() {
     const stored = localStorage.getItem(this.storageKey);
     if (stored) {
         try {
