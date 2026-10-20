@@ -30,6 +30,42 @@ class DataManager {
                     });
                 });
 
+                // Repair the zero-hour Audit placeholder created by the earlier syllabus import.
+                // Prefer the browser's pre-migration backup when available so existing progress is retained.
+                const auditRows = data.subjects?.Audit || [];
+                const auditIsZeroHourPlaceholder = auditRows.length > 0 &&
+                    auditRows.every(item => (Number(item.duration) || 0) === 0);
+
+                if (auditIsZeroHourPlaceholder && (initialData.subjects?.Audit || []).some(item => (Number(item.duration) || 0) > 0)) {
+                    let sourceAudit = initialData.subjects.Audit;
+                    try {
+                        const backupText = localStorage.getItem('caFinalTrackerData_before_syllabus_migration');
+                        if (backupText) {
+                            const backupData = JSON.parse(backupText);
+                            if ((backupData.subjects?.Audit || []).some(item => (Number(item.duration) || 0) > 0)) {
+                                sourceAudit = backupData.subjects.Audit;
+                            }
+                        }
+                    } catch (backupError) {
+                        console.warn('Could not read pre-migration backup; using the original Audit syllabus.', backupError);
+                    }
+
+                    const normalizeTopic = value => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+                    data.subjects.Audit = sourceAudit.map((chapter, index) => {
+                        const previous = auditRows.find(item => normalizeTopic(item.topic) === normalizeTopic(chapter.topic));
+                        return {
+                            ...chapter,
+                            chapter: String(chapter.chapter || index + 1),
+                            status: previous?.status || chapter.status || 'Pending',
+                            selfStudy: previous?.selfStudy || chapter.selfStudy || 'Pending',
+                            rev1: previous?.rev1 || chapter.rev1 || 'Pending',
+                            rev2: previous?.rev2 || chapter.rev2 || 'Pending',
+                            rev3: previous?.rev3 || chapter.rev3 || 'Pending',
+                            notes: previous?.notes || chapter.notes || ''
+                        };
+                    });
+                }
+
                 localStorage.setItem(this.storageKey, JSON.stringify(data));
                 return data;
             } catch (e) {
