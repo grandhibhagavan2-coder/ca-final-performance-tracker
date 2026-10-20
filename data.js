@@ -2672,3 +2672,117 @@ var initialData = {
   "studyLog": [],
   "examDate": "2027-05-01"
 };
+// ==========================================
+// CA FINAL NEW SYLLABUS — FR, AFM AND AUDIT
+// ==========================================
+
+function makeSyllabusChapter(chapter, topic, lectures, hours) {
+    return {
+        chapter: String(chapter),
+        topic,
+        lectures,
+        durationStr: String(hours),
+        duration: hours,
+        status: "Pending",
+        selfStudy: "Pending",
+        rev1: "Pending",
+        rev2: "Pending",
+        rev3: "Pending",
+        notes: ""
+    };
+}
+
+// FINANCIAL REPORTING — 84 lectures, 210 hours
+initialData.subjects.FR = [
+    ["Introduction to Ind AS", 1, 2.5],
+    ["Ind AS 2", 2, 5],
+    ["Ind AS 16", 5, 13],
+    ["Ind AS 38", 2, 4.5],
+    ["Ind AS 40", 1, 2.5],
+    ["Ind AS 115", 9, 20],
+    ["Ind AS 116", 5, 11],
+    ["Financial Instruments (Ind AS 32, 107, 109)", 8, 20],
+    ["Ind AS 102", 3, 7],
+    ["Ind AS 12", 3, 7],
+    ["Schedule III", 1, 1.5],
+    ["Business Combination (Ind AS 103)", 6, 15],
+    ["Consolidated Financial Statements (Ind AS 27, 28, 110, 111, 112)", 8, 23],
+    ["Ind AS 19", 3, 7],
+    ["Ind AS 34", 1, 2.5],
+    ["Ind AS 108", 1, 2],
+    ["Ind AS 113", 1, 2.5],
+    ["Ind AS 20", 1, 3],
+    ["Ind AS 21", 2, 7],
+    ["Ind AS 23", 3, 6],
+    ["Ind AS 41", 2, 4],
+    ["Ind AS 36", 3, 8],
+    ["Ind AS 105", 1, 3],
+    ["Ind AS 33", 4, 9],
+    ["Ind AS 8 and Ind AS 10", 1, 3.5],
+    ["Ind AS 37 and Ind AS 1", 1, 3.5],
+    ["Ind AS 24 and Conceptual Framework", 1, 3],
+    ["Ind AS 7", 2, 4],
+    ["Ind AS 101", 1, 3],
+    ["Analysis of Financial Statements; Difference between AS and Ind AS", 1, 3.5],
+    ["Professional and Ethical Duty of a CA; Accounting and Technology", 1, 3.5]
+].map((x, i) => makeSyllabusChapter(i + 1, x[0], x[1], x[2]));
+
+// ADVANCED FINANCIAL MANAGEMENT — new batch schedule
+initialData.subjects.AFM = [
+    ["Basics of AFM", 2, 5.5],
+    ["Security Valuation", 9, 22],
+    ["Portfolio Management", 11, 31],
+    ["Risk Management", 1, 3],
+    ["Security Analysis", 1, 4],
+    ["Mutual Funds", 4, 11],
+    ["Business Valuation", 6, 16],
+    ["Mergers, Acquisitions and Corporate Restructuring", 6, 16],
+    ["Derivatives Analysis and Valuation", 6, 16],
+    ["Interest Rate Risk Management (IRRM)", 3, 8],
+    ["Foreign Exchange Exposure and Risk Management (Forex)", 18, 32],
+    ["Advanced Capital Budgeting", 6, 16],
+    ["International Financial Management", 2, 6],
+    ["Financial Policy, Risk Management, Securitization and Startup Finance (Theory)", 1, 3.5],
+    ["Additional Questions and Currency Swap (Forex) — YouTube", 1, 2],
+    ["Assumptions, Rounding Off and Special Summary Points — YouTube", 1, 3],
+    ["May 2026 Paper Solutions and Tough Paper Strategy — YouTube", 1, 3]
+].map((x, i) => makeSyllabusChapter(i + 1, x[0], x[1], x[2]));
+
+// AUDIT — topic sequence from your uploaded batch planner.
+// The PDF is a day-wise planner; hours are not available for every topic.
+// Do not treat the day number as the official lecture number.
+initialData.subjects.Audit = [
+    "Basic",
+    "SQC 1",
+    "SA 250",
+    "SA 260",
+    "SA 299",
+    "SA 240",
+    "SA 550",
+    "SA 500, SA 501, SA 505, SA 510 and SA 560",
+    "SA 265 and Case Study",
+    "SA 570 and SA 580",
+    "SA 320, SA 530 and SA 450",
+    "SA 700, SA 701, SA 705, SA 706, SA 710 and SA 720",
+    "Company Audit",
+    "CARO 2020",
+    "Professional Ethics",
+    "SA 620",
+    "SA 540 and SA 402",
+    "SAE 3402 and SA 520",
+    "NBFC",
+    "Group Audit and SA 600",
+    "Internal Audit and SA 610",
+    "SA 800, SA 805 and SA 810",
+    "SRE 2400 and SRE 2410",
+    "SAE 3400, SAE 3420, SRS 4400 and SRS 4410",
+    "PSU Audit",
+    "Due Diligence",
+    "Forensic Audit",
+    "ESG and ESG Case Study",
+    "Audit Plan",
+    "Bank Audit",
+    "RAIC",
+    "Investigation",
+    "Digital Audit — 5 videos"
+].map((topic, i) => makeSyllabusChapter(i + 1, topic, 0, 0));
