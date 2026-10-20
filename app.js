@@ -204,22 +204,49 @@ function renderDashboard() {
     const grid = document.getElementById('dashboard-subjects-grid');
     grid.innerHTML = '';
 
-    subjectsList.forEach(subject => {
-        const subjStat = stats.subjectStats[subject];
-        const pctVal = Math.round(subjStat.completionPct);
+    const groups = {
+        'Group 1': ['FR', 'AFM', 'Audit'],
+        'Group 2': ['DT', 'IDT']
+    };
 
+    Object.entries(groups).forEach(([groupName, subjects]) => {
         grid.innerHTML += `
-            <div class="card">
-                <h4>${subject}</h4>
-                <div class="progress-bar-container mt-2 mb-2" style="background-color: #444;">
-                    <div class="progress-bar" style="width: ${pctVal}%"></div>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Completion:</span>
-                    <span class="stat-value">${pctVal}%</span>
-                </div>
+            <div style="grid-column:1/-1;margin-top:18px;">
+                <h3>${groupName}</h3>
+                <p style="color:var(--text-secondary,#aaa);margin-top:4px;">${subjects.join(' · ')}</p>
             </div>
         `;
+
+        subjects.forEach(subject => {
+            const subjStat = stats.subjectStats[subject];
+            const pctVal = Math.round(subjStat.completionPct);
+            const chapters = dm.data.subjects[subject] || [];
+            const totalHours = chapters.reduce((sum, ch) => sum + (Number(ch.duration) || 0), 0);
+            const completedHours = chapters.reduce((sum, ch) => sum + (ch.status === 'Completed' ? (Number(ch.duration) || 0) : 0), 0);
+            const plannedLabel = subject === 'DT' ? 'Approx. 250 hrs' :
+                subject === 'IDT' ? 'Approx. 120 hrs' : `${Math.round(totalHours)} hrs from chapter data`;
+
+            grid.innerHTML += `
+                <div class="card">
+                    <h4>${subject}</h4>
+                    <div class="progress-bar-container mt-2 mb-2" style="background-color:#444;">
+                        <div class="progress-bar" style="width:${pctVal}%"></div>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Class completion:</span>
+                        <span class="stat-value">${pctVal}%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Planned duration:</span>
+                        <span class="stat-value">${plannedLabel}</span>
+                    </div>
+                    ${totalHours > 0 ? `<div class="stat-row">
+                        <span class="stat-label">Completed class hours:</span>
+                        <span class="stat-value">${Math.round(completedHours)} / ${Math.round(totalHours)} hrs</span>
+                    </div>` : ''}
+                </div>
+            `;
+        });
     });
 
     updateCountdown();
