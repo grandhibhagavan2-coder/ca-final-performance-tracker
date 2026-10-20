@@ -2748,41 +2748,6 @@ initialData.subjects.AFM = [
     ["May 2026 Paper Solutions and Tough Paper Strategy — YouTube", 1, 3]
 ].map((x, i) => makeSyllabusChapter(i + 1, x[0], x[1], x[2]));
 
-// AUDIT — topic sequence from your uploaded batch planner.
-// The PDF is a day-wise planner; hours are not available for every topic.
-// Do not treat the day number as the official lecture number.
-initialData.subjects.Audit = [
-    "Basic",
-    "SQC 1",
-    "SA 250",
-    "SA 260",
-    "SA 299",
-    "SA 240",
-    "SA 550",
-    "SA 500, SA 501, SA 505, SA 510 and SA 560",
-    "SA 265 and Case Study",
-    "SA 570 and SA 580",
-    "SA 320, SA 530 and SA 450",
-    "SA 700, SA 701, SA 705, SA 706, SA 710 and SA 720",
-    "Company Audit",
-    "CARO 2020",
-    "Professional Ethics",
-    "SA 620",
-    "SA 540 and SA 402",
-    "SAE 3402 and SA 520",
-    "NBFC",
-    "Group Audit and SA 600",
-    "Internal Audit and SA 610",
-    "SA 800, SA 805 and SA 810",
-    "SRE 2400 and SRE 2410",
-    "SAE 3400, SAE 3420, SRS 4400 and SRS 4410",
-    "PSU Audit",
-    "Due Diligence",
-    "Forensic Audit",
-    "ESG and ESG Case Study",
-    "Audit Plan",
-    "Bank Audit",
-    "RAIC",
-    "Investigation",
-    "Digital Audit — 5 videos"
-].map((topic, i) => makeSyllabusChapter(i + 1, topic, 0, 0));
+// AUDIT: Keep the original chapter-wise lecture durations and structure
+// from initialData above. The day-wise planner does not provide reliable
+// per-topic lecture hours, so do not overwrite those durations with zero.
