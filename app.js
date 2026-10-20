@@ -7,21 +7,38 @@ class DataManager {
     constructor() {
         this.storageKey = 'caFinalTrackerData';
         this.data = this.loadData();
+    loadData() {
+    const stored = localStorage.getItem(this.storageKey);
+    if (stored) {
+        try {
+            const data = JSON.parse(stored);
+
+            // Repair old chapter values without resetting study progress.
+            ['AFM', 'Audit'].forEach(subject => {
+                const chapters = data.subjects?.[subject] || [];
+
+                chapters.forEach((item, index) => {
+                    if (
+                        typeof item.chapter === 'string' &&
+                        (item.chapter.startsWith('=') ||
+                         /^\d{4}-\d{2}-\d{2}/.test(item.chapter))
+                    ) {
+                        item.chapter = String(index + 1);
+                    }
+                });
+            });
+
+            localStorage.setItem(this.storageKey, JSON.stringify(data));
+            return data;
+        } catch (e) {
+            console.error("Saved tracker data is corrupted; refusing to overwrite it.", e);
+            alert("Saved tracker data could not be read. Restore your JSON backup before continuing.");
+            throw new Error("Corrupted saved tracker data");
+        }
     }
 
-    loadData() {
-        const stored = localStorage.getItem(this.storageKey);
-        if (stored) {
-            try {
-                return JSON.parse(stored);
-            } catch (e) {
-                console.error("Saved tracker data is corrupted; refusing to overwrite it.", e);
-                alert("Saved tracker data could not be read. Do not continue until you restore a JSON backup.");
-                throw new Error("Corrupted saved tracker data");
-            }
-        }
-        return this.getDefaultData();
-    }
+    return this.getDefaultData();
+}
 
     getDefaultData() {
         // Deep copy of initialData from data.js
