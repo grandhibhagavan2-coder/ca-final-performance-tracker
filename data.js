@@ -2786,3 +2786,31 @@ initialData.subjects.Audit = [
     ["Investigation", 0, 0],
     ["Digital Audit — 5 videos", 5, 0]
 ].map((x, i) => makeSyllabusChapter(i + 1, x[0], x[1], x[2]));
+const idtLessonTitles = [
+"01 Introduction to GST, Inclusions in supply and Definitions — P1","01 Introduction to GST, Inclusions in supply and Definitions — P2","01 Introduction to GST, Inclusions in supply and Definitions — P3",
+"02 Exclusion from supply, classification of supply, circulars on supply, Composite/Mixed supply — P1","02 Exclusion from supply, classification of supply, circulars on supply, Composite/Mixed supply — P2","02 Exclusion from supply, classification of supply, circulars on supply, Composite/Mixed supply — P3",
+"03 Circulars on liquidated damages, Exemptions under GST — P1","03 Circulars on liquidated damages, Exemptions under GST — P2","03 Circulars on liquidated damages, Exemptions under GST — P3",
+"04 Exemptions under GST II — P1","04 Exemptions under GST II — P2","04 Exemptions under GST II — P3",
+"05 Exemptions under GST III, Goods under RCM, Service under RCM — P1","05 Exemptions under GST III, Goods under RCM, Service under RCM — P2","05 Exemptions under GST III, Goods under RCM, Service under RCM — P3",
+"06 Purchase from URP, ECO liability, TDS/TCS — P1","06 Purchase from URP, ECO liability, TDS/TCS — P2","06 Purchase from URP, ECO liability, TDS/TCS — P3",
+"07 Composition Scheme and value of supply I — P1","07 Composition Scheme and value of supply I — P2","07 Composition Scheme and value of supply I — P3",
+"08 Value of supply II — P1","08 Value of supply II — P2","09 Value of supply III — P1","09 Value of supply III — P2",
+"10 Input tax credit I — P1","10 Input tax credit I — P2","10 Input tax credit I — P3",
+"011 Input tax credit II — P1","011 Input tax credit II — P2",
+"012 Input tax credit III — P1","012 Input tax credit III — P2","012 Input tax credit III — P3",
+"013 Place of supply — P1","013 Place of supply — P2","013 Place of supply — P3",
+"014 Circulars on place of supply, time of supply, payment process under GST — P1","014 Circulars on place of supply, time of supply, payment process under GST — P2","014 Circulars on place of supply, time of supply, payment process under GST — P3",
+"015 Tax Invoice and Registrations — P1","015 Tax Invoice and Registrations — P2","015 Tax Invoice and Registrations — P3",
+"016 Returns under GST, accounts and records, e-way bill — P1","016 Returns under GST, accounts and records, e-way bill — P2","016 Returns under GST, accounts and records, e-way bill — P3","016 Returns under GST, accounts and records, e-way bill — P4",
+"017 Assessment, Audit, Refunds under GST, Search and Seizure — P1","017 Assessment, Audit, Refunds under GST, Search and Seizure — P2","017 Assessment, Audit, Refunds under GST, Search and Seizure — P3","017 Assessment, Audit, Refunds under GST, Search and Seizure — P4",
+"018 Offences and penalties, Demand and Recovery under GST — P1","018 Offences and penalties, Demand and Recovery under GST — P2","018 Offences and penalties, Demand and Recovery under GST — P3","018 Offences and penalties, Demand and Recovery under GST — P4",
+"019 Advance Ruling, Ethics and other provisions, Taxable event under Customs, computation of Customs duty — P1","019 Advance Ruling, Ethics and other provisions, Taxable event under Customs, computation of Customs duty — P2",
+"020 Classification of goods, types of duties, Valuation, Baggage — P1","020 Classification of goods, types of duties, Valuation, Baggage — P2","020 Classification of goods, types of duties, Valuation, Baggage — P3","020 Classification of goods, types of duties, Valuation, Baggage — P4",
+"021 Exemption under Customs, warehousing, Customs refund procedures, stores — P1","021 Exemption under Customs, warehousing, Customs refund procedures, stores — P2","021 Exemption under Customs, warehousing, Customs refund procedures, stores — P3","021 Exemption under Customs, warehousing, Customs refund procedures, stores — P4",
+"022 Foreign Trade Policy"
+];
+const idtAverageHours = 125 / idtLessonTitles.length;
+initialData.subjects.IDT = idtLessonTitles.map((topic, i) =>
+    makeSyllabusChapter(i + 1, topic, 1, idtAverageHours)
+);
+
