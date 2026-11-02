@@ -2809,8 +2809,18 @@ const idtLessonTitles = [
 "021 Exemption under Customs, warehousing, Customs refund procedures, stores — P1","021 Exemption under Customs, warehousing, Customs refund procedures, stores — P2","021 Exemption under Customs, warehousing, Customs refund procedures, stores — P3","021 Exemption under Customs, warehousing, Customs refund procedures, stores — P4",
 "022 Foreign Trade Policy"
 ];
-const idtAverageHours = 125 / idtLessonTitles.length;
-initialData.subjects.IDT = idtLessonTitles.map((topic, i) =>
-    makeSyllabusChapter(i + 1, topic, 1, idtAverageHours)
-);
+// Allocate the 125-hour estimate in whole minutes so the displayed
+// lesson durations are readable and add up exactly to 125 hours.
+const idtTotalMinutes = 125 * 60;
+const idtBaseMinutes = Math.floor(idtTotalMinutes / idtLessonTitles.length);
+const idtExtraMinuteParts = idtTotalMinutes % idtLessonTitles.length;
+initialData.subjects.IDT = idtLessonTitles.map((topic, i) => {
+    const minutes = idtBaseMinutes + (i < idtExtraMinuteParts ? 1 : 0);
+    const hours = minutes / 60;
+    const durationStr = `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, "0")}`;
+    return {
+        ...makeSyllabusChapter(i + 1, topic, 1, hours),
+        durationStr
+    };
+});
 
