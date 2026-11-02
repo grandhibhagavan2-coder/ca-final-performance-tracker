@@ -279,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (targetId === 'dashboard') renderDashboard();
+            if (targetId === 'abc-analysis') renderABCAnalysis();
             if (targetId === 'study-log') renderStudyLog();
             if (targetId === 'test-papers') renderTestPapers();
         });
@@ -287,6 +288,22 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDashboard();
     initSettings();
 });
+
+
+let abcSelectedSubject = 'FR';
+let abcSelectedCategory = 'A';
+function renderABCAnalysis(){
+ const subjectHost=document.getElementById('abc-subject-tabs');
+ const categoryHost=document.getElementById('abc-category-tabs');
+ if(!subjectHost||!categoryHost)return;
+ subjectHost.innerHTML=Object.keys(abcAnalysisData).map(s=>'<button class="abc-tab '+(s===abcSelectedSubject?'active':'')+'" data-abc-subject="'+s+'">'+s+'</button>').join('');
+ categoryHost.innerHTML=['A','B','C'].map(c=>'<button class="abc-tab '+(c===abcSelectedCategory?'active':'')+'" data-category="'+c+'">Category '+c+'</button>').join('');
+ const data=abcAnalysisData[abcSelectedSubject], chapters=data.categories[abcSelectedCategory]||[];
+ document.getElementById('abc-summary').innerHTML='<span><strong>'+abcSelectedSubject+'</strong> · Category '+abcSelectedCategory+' · '+chapters.length+' topics</span><span>Indicative weightage: <strong>'+(data.marks[abcSelectedCategory]||'As stated in PDF')+' marks</strong></span><span>'+data.guidance[abcSelectedCategory]+'</span>';
+ document.getElementById('abc-chapter-list').innerHTML=chapters.map((topic,i)=>'<tr><td>'+(i+1)+'</td><td>'+escapeHtml(topic)+'</td><td><span class="abc-priority '+abcSelectedCategory.toLowerCase()+'">'+abcSelectedCategory+'</span></td></tr>').join('');
+ subjectHost.querySelectorAll('[data-abc-subject]').forEach(b=>b.addEventListener('click',()=>{abcSelectedSubject=b.dataset.abcSubject;renderABCAnalysis();}));
+ categoryHost.querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{abcSelectedCategory=b.dataset.category;renderABCAnalysis();}));
+}
 
 // Calculate Overall Statistics
 function calculateStats() {
