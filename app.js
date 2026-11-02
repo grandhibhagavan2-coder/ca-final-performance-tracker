@@ -479,7 +479,48 @@ function renderDashboard() {
         });
     });
 
+    renderNotebookExtras();
     updateCountdown();
+}
+
+function renderNotebookExtras() {
+    const subjects = Object.values(dm.data.subjects || {}).flat();
+    const total = subjects.length || 1;
+    const rev1 = subjects.filter(ch => ch.rev1 === 'Completed').length;
+    const rev2 = subjects.filter(ch => ch.rev2 === 'Completed').length;
+    const p1 = Math.round(rev1 / total * 100);
+    const p2 = Math.round(rev2 / total * 100);
+    document.getElementById('dash-rev1').textContent = p1 + '%';
+    document.getElementById('dash-rev2').textContent = p2 + '%';
+    document.getElementById('dash-rev1-bar').style.width = p1 + '%';
+    document.getElementById('dash-rev2-bar').style.width = p2 + '%';
+
+    const savedTargets = JSON.parse(localStorage.getItem('caFinalDashboardTargets') || '{}');
+    document.querySelectorAll('[data-dash-target]').forEach(input => {
+        input.checked = !!savedTargets[input.dataset.dashTarget];
+        input.onchange = () => {
+            const next = JSON.parse(localStorage.getItem('caFinalDashboardTargets') || '{}');
+            next[input.dataset.dashTarget] = input.checked;
+            localStorage.setItem('caFinalDashboardTargets', JSON.stringify(next));
+        };
+    });
+    const notes = document.getElementById('dashboard-notes');
+    notes.value = localStorage.getItem('caFinalDashboardNotes') || '';
+    notes.oninput = () => {
+        localStorage.setItem('caFinalDashboardNotes', notes.value);
+        document.getElementById('dashboard-notes-status').textContent = 'Saved';
+    };
+    document.querySelectorAll('[data-go]').forEach(button => {
+        button.onclick = () => {
+            const target = button.dataset.go;
+            const nav = document.querySelector('.nav-links li[data-target="' + target + '"]');
+            if (nav) nav.click();
+            else if (target.startsWith('subject-')) {
+                const subjectNav = document.querySelector('.nav-links li[data-target="' + target + '"]');
+                if (subjectNav) subjectNav.click();
+            }
+        };
+    });
 }
 function updateCountdown() {
     const userExamDate = dm.data.examDate || '2027-05-01T00:00:00';
