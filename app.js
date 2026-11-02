@@ -292,19 +292,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let abcSelectedSubject = 'FR';
 let abcSelectedCategory = 'A';
-function renderABCAnalysis(){
- const subjectHost=document.getElementById('abc-subject-tabs');
- const categoryHost=document.getElementById('abc-category-tabs');
- if(!subjectHost||!categoryHost)return;
- subjectHost.innerHTML=Object.keys(abcAnalysisData).map(s=>'<button class="abc-tab '+(s===abcSelectedSubject?'active':'')+'" data-abc-subject="'+s+'">'+s+'</button>').join('');
- categoryHost.innerHTML=['A','B','C'].map(c=>'<button class="abc-tab '+(c===abcSelectedCategory?'active':'')+'" data-category="'+c+'">Category '+c+'</button>').join('');
- const data=abcAnalysisData[abcSelectedSubject], chapters=data.categories[abcSelectedCategory]||[];
- document.getElementById('abc-summary').innerHTML='<span><strong>'+abcSelectedSubject+'</strong> · Category '+abcSelectedCategory+' · '+chapters.length+' topics</span><span>Indicative weightage: <strong>'+(data.marks[abcSelectedCategory]||'As stated in PDF')+' marks</strong></span><span>'+data.guidance[abcSelectedCategory]+'</span>';
- document.getElementById('abc-chapter-list').innerHTML=chapters.map((topic,i)=>'<tr><td>'+(i+1)+'</td><td>'+escapeHtml(topic)+'</td><td><span class="abc-priority '+abcSelectedCategory.toLowerCase()+'">'+abcSelectedCategory+'</span></td></tr>').join('');
- subjectHost.querySelectorAll('[data-abc-subject]').forEach(b=>b.addEventListener('click',()=>{abcSelectedSubject=b.dataset.abcSubject;renderABCAnalysis();}));
- categoryHost.querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{abcSelectedCategory=b.dataset.category;renderABCAnalysis();}));
+const abcProgressKey = 'caFinalABCProgress';
+function getABCProgress() {
+    try { return JSON.parse(localStorage.getItem(abcProgressKey) || '{}'); }
+    catch (e) { return {}; }
 }
+function saveABCProgress(key, field, value) {
+    const progress = getABCProgress();
+    progress[key] = { ...(progress[key] || {}), [field]: value };
+    localStorage.setItem(abcProgressKey, JSON.stringify(progress));
+}
+function renderABCAnalysis() {
+    const subjectHost = document.getElementById('abc-subject-tabs');
+    const categoryHost = document.getElementById('abc-category-tabs');
+    if (!subjectHost || !categoryHost) return;
+    const progress = getABCProgress();
+    subjectHost.innerHTML = Object.keys(abcAnalysisData).map(s =>
+        '<button class="abc-tab '+(s===abcSelectedSubject?'active':'')+'" data-abc-subject="'+s+'">'+s+'</button>'
+    ).join('');
+    categoryHost.innerHTML = ['A','B','C'].map(c =>
+        '<button class="abc-tab '+(c===abcSelectedCategory?'active':'')+'" data-category="'+c+'">Category '+c+'</button>'
+    ).join('');
 
+    const data = abcAnalysisData[abcSelectedSubject];
+    const chapters = data.categories[abcSelectedCategory] || [];
+    const rows = chapters.map((topic, i) => {
+        const key = [abcSelectedSubject, abcSelectedCategory, topic].join('::');
+        const item = progress[key] || {};
+        const completed = item.status === 'Completed';
+        const rev1 = item.rev1 || 'Pending';
+        const rev2 = item.rev2 || 'Pending';
+        return '<tr><td class="abc-number">'+(i+1)+'</td>'+
+            '<td class="abc-topic-cell"><div class="abc-topic">'+escapeHtml(topic)+'</div><span class="abc-priority '+abcSelectedCategory.toLowerCase()+'">Priority '+abcSelectedCategory+'</span></td>'+
+            '<td><select class="abc-control abc-status '+(completed?'is-complete':'')+'" data-key="'+encodeURIComponent(key)+'" data-field="status"><option value="Pending" '+(!completed?'selected':'')+'>Pending</option><option value="Completed" '+(completed?'selected':'')+'>Completed</option></select></td>'+
+            '<td><select class="abc-control" data-key="'+encodeURIComponent(key)+'" data-field="rev1"><option value="Pending" '+(rev1==='Pending'?'selected':'')+'>Pending</option><option value="Completed" '+(rev1==='Completed'?'selected':'')+'>Done</option></select></td>'+
+            '<td><select class="abc-control" data-key="'+encodeURIComponent(key)+'" data-field="rev2"><option value="Pending" '+(rev2==='Pending'?'selected':'')+'>Pending</option><option value="Completed" '+(rev2==='Completed'?'selected':'')+'>Done</option></select></td>'+
+            '<td><input class="abc-remarks" type="text" maxlength="180" placeholder="Weak areas / notes..." value="'+escapeHtml(item.remarks || '')+'" data-key="'+encodeURIComponent(key)+'" data-field="remarks"></td></tr>';
+    }).join('');
+
+    const completedCount = chapters.filter(topic => (progress[[abcSelectedSubject,abcSelectedCategory,topic].join('::')] || {}).status === 'Completed').length;
+    const rev1Count = chapters.filter(topic => (progress[[abcSelectedSubject,abcSelectedCategory,topic].join('::')] || {}).rev1 === 'Completed').length;
+    const rev2Count = chapters.filter(topic => (progress[[abcSelectedSubject,abcSelectedCategory,topic].join('::')] || {}).rev2 === 'Completed').length;
+    const pct = chapters.length ? Math.round(completedCount / chapters.length * 100) : 0;
+    document.getElementById('abc-summary').innerHTML =
+        '<div class="abc-summary-main"><span class="abc-kicker">'+abcSelectedSubject+' / CATEGORY '+abcSelectedCategory+'</span><strong>'+chapters.length+' topics · '+(data.marks[abcSelectedCategory]||'As stated in PDF')+' indicative marks</strong><span>'+escapeHtml(data.guidance[abcSelectedCategory])+'</span></div>'+
+        '<div class="abc-progress-block"><div class="abc-progress-label"><span>Chapter completion</span><strong>'+completedCount+'/'+chapters.length+' · '+pct+'%</strong></div><div class="abc-progress-track"><span style="width:'+pct+'%"></span></div><div class="abc-revision-counts"><span>Revision 1 <b>'+rev1Count+'/'+chapters.length+'</b></span><span>Revision 2 <b>'+rev2Count+'/'+chapters.length+'</b></span></div></div>';
+    document.getElementById('abc-chapter-list').innerHTML = rows;
+    subjectHost.querySelectorAll('[data-abc-subject]').forEach(b => b.addEventListener('click', () => { abcSelectedSubject=b.dataset.abcSubject; renderABCAnalysis(); }));
+    categoryHost.querySelectorAll('[data-category]').forEach(b => b.addEventListener('click', () => { abcSelectedCategory=b.dataset.category; renderABCAnalysis(); }));
+    document.querySelectorAll('#abc-chapter-list [data-field]').forEach(control => {
+        const save = () => {
+            saveABCProgress(decodeURIComponent(control.dataset.key), control.dataset.field, control.value);
+            if (control.dataset.field === 'status' || control.dataset.field === 'rev1' || control.dataset.field === 'rev2') renderABCAnalysis();
+            else control.classList.add('saved');
+        };
+        control.addEventListener(control.tagName === 'INPUT' ? 'change' : 'change', save);
+    });
+}
 // Calculate Overall Statistics
 function calculateStats() {
     let totalLectures = 0;
