@@ -132,6 +132,16 @@ class DataManager {
                 // equal share of the 125-hour batch estimate.
                 const savedIDT = data.subjects?.IDT || [];
                 const plannerIDT = initialData.subjects?.IDT || [];
+
+                // Refresh duration display and exact minute allocations for
+                // the already-migrated 65-part IDT list.
+                if (savedIDT.length === 65 && plannerIDT.length === 65) {
+                    data.subjects.IDT = savedIDT.map((chapter, index) => ({
+                        ...chapter,
+                        duration: plannerIDT[index].duration,
+                        durationStr: plannerIDT[index].durationStr
+                    }));
+                }
                 const isLegacyIDT = savedIDT.length === 36 && plannerIDT.length === 65;
 
                 if (isLegacyIDT) {
