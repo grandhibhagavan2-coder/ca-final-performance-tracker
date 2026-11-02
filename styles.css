@@ -461,3 +461,45 @@ input:focus, select:focus {
 .abc-priority.a{background:#174b30;color:#8de0ad}.abc-priority.b{background:#594515;color:#f4d27b}.abc-priority.c{background:#393939;color:#ccc}
 .abc-footnote{font-size:.76rem;color:var(--text-secondary);margin-top:9px}
 @media(max-width:768px){.abc-summary{align-items:flex-start;flex-direction:column}.abc-table-wrap{max-height:65vh}.abc-table{font-size:.8rem}.abc-table th,.abc-table td{padding:7px 8px}}
+
+
+/* ABC Analysis — refined study workspace */
+#abc-analysis{--abc-ink:#17233b;--abc-muted:#65738b;--abc-line:#e4eaf3}
+#abc-analysis .section-header{margin-bottom:18px}
+#abc-analysis .section-header h1{font-size:2rem;letter-spacing:-.04em;color:var(--text-primary)}
+#abc-analysis .section-header p{color:var(--text-secondary)}
+#abc-analysis .abc-toolbar{gap:12px;padding:16px;background:linear-gradient(120deg,rgba(68,91,160,.13),rgba(25,160,145,.10));border:1px solid var(--border-color);border-radius:16px}
+#abc-analysis .abc-subject-tabs,#abc-analysis .abc-category-tabs{gap:8px}
+#abc-analysis .abc-tab{padding:9px 17px;border-radius:10px;background:rgba(255,255,255,.06);transition:transform .18s,box-shadow .18s}
+#abc-analysis .abc-tab:hover{transform:translateY(-1px)}
+#abc-analysis .abc-subject-tabs .abc-tab.active{background:linear-gradient(135deg,#5268c9,#298e9b);box-shadow:0 5px 15px rgba(62,91,174,.25)}
+#abc-analysis .abc-category-tabs .abc-tab.active{box-shadow:0 4px 12px rgba(0,0,0,.16)}
+#abc-analysis .abc-summary{display:grid;grid-template-columns:minmax(220px,1fr) minmax(250px,1fr);gap:18px;padding:17px 20px;border-radius:14px}
+.abc-summary-main{display:flex;flex-direction:column;gap:5px}
+.abc-summary-main strong{font-size:1.05rem;color:var(--text-primary)}
+.abc-summary-main>span:last-child{font-size:.82rem;color:var(--text-secondary)}
+.abc-kicker{font-size:.7rem;font-weight:800;letter-spacing:.12em;color:#8194d9}
+.abc-progress-block{align-self:center}
+.abc-progress-label,.abc-revision-counts{display:flex;justify-content:space-between;gap:12px;font-size:.8rem;color:var(--text-secondary)}
+.abc-progress-label strong,.abc-revision-counts b{color:var(--text-primary)}
+.abc-progress-track{height:8px;margin:7px 0 9px;background:rgba(128,140,160,.2);border-radius:20px;overflow:hidden}
+.abc-progress-track span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#586ed0,#2bb39b);transition:width .25s}
+.abc-revision-counts{justify-content:flex-start;gap:22px}
+#abc-analysis .abc-table-wrap{max-height:calc(100vh - 370px);min-height:260px;border-radius:14px;box-shadow:0 8px 26px rgba(0,0,0,.08)}
+#abc-analysis .abc-table{font-size:.82rem}
+#abc-analysis .abc-table th{background:linear-gradient(110deg,#27375d,#354e78);padding:12px 10px;white-space:nowrap}
+#abc-analysis .abc-table td{padding:9px 10px;vertical-align:middle}
+#abc-analysis .abc-table tbody tr:nth-child(even){background:rgba(125,145,180,.055)}
+#abc-analysis .abc-table tbody tr:hover{background:rgba(83,111,190,.10)}
+#abc-analysis .abc-number{font-weight:700;color:var(--text-secondary)}
+#abc-analysis .abc-topic-cell{min-width:250px}
+.abc-topic{font-weight:600;line-height:1.35;margin-bottom:5px;color:var(--text-primary)}
+#abc-analysis .abc-priority{font-size:.65rem;letter-spacing:.04em;text-transform:uppercase}
+.abc-control,.abc-remarks{width:100%;min-width:92px;padding:7px 8px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg);color:var(--text-primary);font:inherit;font-size:.78rem}
+.abc-control:focus,.abc-remarks:focus{outline:2px solid rgba(87,111,202,.28);border-color:#7185d6}
+.abc-status.is-complete{border-color:#2c9a75;color:#35a77f;font-weight:700}
+.abc-remarks{min-width:170px}
+.abc-remarks::placeholder{color:var(--text-secondary);opacity:.75}
+.abc-footnote{padding:10px 2px;color:var(--text-secondary)}
+@media(max-width:900px){#abc-analysis .abc-table-wrap{max-height:68vh;overflow:auto}#abc-analysis .abc-summary{grid-template-columns:1fr}}
+@media(max-width:600px){#abc-analysis .abc-tab{padding:8px 11px}#abc-analysis .abc-table{min-width:850px}}
