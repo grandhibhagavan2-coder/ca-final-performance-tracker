@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CA Final Performance Tracker</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="styles.css?v=20261103-notebook1">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="styles.css?v=20261103-cote-notebook2">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -38,9 +38,14 @@
         <main class="main-content">
             <!-- Dashboard View -->
             <section id="dashboard" class="view-section active">
-                <header class="section-header">
-                    <h1>Dashboard</h1>
-                    <p>Performance Analysis & Overview</p>
+                <header class="section-header notebook-hero">
+                    <div class="notebook-hero-copy">
+                        <span class="notebook-eyebrow">MY PREPARATION SYSTEM</span>
+                        <h1>Dashboard</h1>
+                        <p>Performance Analysis & Overview</p>
+                    </div>
+                    <div class="ayanokoji-quote">“A tool for discipline,<br>not just tracking.”<span>— Ayanokoji</span></div>
+                    <img class="ayanokoji-portrait" src="assets/ayanokoji-header.jpg" alt="Ayanokoji-inspired anime portrait">
                 </header>
                 <div class="dashboard-grid">
                     <div class="card overall-card">
@@ -77,6 +82,35 @@
                 <h3 class="mt-4 mb-2">Subject Progress</h3>
                 <div class="subjects-grid" id="dashboard-subjects-grid">
                     <!-- Populated by JS -->
+                </div>
+                <div class="notebook-lower-grid">
+                    <div class="note-card quick-card">
+                        <h3><span>⚡</span> Quick Actions</h3>
+                        <button class="notebook-action" data-go="study-log">＋ Plan today's study log</button>
+                        <button class="notebook-action" data-go="abc-analysis">↗ Open ABC Analysis</button>
+                        <button class="notebook-action" data-go="test-papers">✓ Update test paper</button>
+                        <button class="notebook-action" data-go="subject-FR">▤ Continue FR</button>
+                    </div>
+                    <div class="note-card revision-card">
+                        <h3><span>↻</span> Revision Tracker (Overall)</h3>
+                        <div class="revision-line"><label>Revision 1</label><strong id="dash-rev1">0%</strong></div>
+                        <div class="mini-track"><span id="dash-rev1-bar"></span></div>
+                        <div class="revision-line"><label>Revision 2</label><strong id="dash-rev2">0%</strong></div>
+                        <div class="mini-track"><span id="dash-rev2-bar"></span></div>
+                        <p class="note-small">Calculated from chapter-wise revision status.</p>
+                    </div>
+                    <div class="note-card targets-card">
+                        <h3><span>◎</span> Targets</h3>
+                        <label class="target-line"><input type="checkbox" data-dash-target="lectures"> Complete lectures</label>
+                        <label class="target-line"><input type="checkbox" data-dash-target="revisions"> 2 revisions minimum</label>
+                        <label class="target-line"><input type="checkbox" data-dash-target="questions"> Practice ICAI questions</label>
+                        <label class="target-line"><input type="checkbox" data-dash-target="mock"> Attempt MTP / RTP</label>
+                    </div>
+                    <div class="note-card notes-card">
+                        <h3><span>✎</span> Notes</h3>
+                        <textarea id="dashboard-notes" rows="4" placeholder="Write your focus areas, weak topics and reminders..."></textarea>
+                        <span class="note-small" id="dashboard-notes-status">Saved automatically</span>
+                    </div>
                 </div>
             </section>
 
