@@ -440,3 +440,24 @@ input:focus, select:focus {
         padding: 15px;
     }
 }
+
+/* ABC Analysis */
+.abc-toolbar{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.abc-subject-tabs,.abc-category-tabs{display:flex;gap:7px;flex-wrap:wrap}
+.abc-tab{border:1px solid var(--border-color);background:#242424;color:var(--text-secondary);padding:7px 13px;border-radius:7px;cursor:pointer;font-weight:600}
+.abc-tab.active{background:var(--accent-color);border-color:var(--accent-color);color:#fff}
+.abc-category-tabs .abc-tab[data-category="A"].active{background:#287a49;border-color:#287a49}
+.abc-category-tabs .abc-tab[data-category="B"].active{background:#9b741b;border-color:#9b741b}
+.abc-category-tabs .abc-tab[data-category="C"].active{background:#555;border-color:#777}
+.abc-summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;margin:8px 0;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;color:var(--text-secondary);font-size:.88rem}
+.abc-summary strong{color:var(--text-primary)}
+.abc-table-wrap{max-height:calc(100vh - 330px);min-height:300px;overflow:auto;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px}
+.abc-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.abc-table th{position:sticky;top:0;background:#303030;text-align:left;color:#fff;z-index:2}
+.abc-table th,.abc-table td{padding:8px 12px;border-bottom:1px solid var(--border-color);vertical-align:top}
+.abc-table td:first-child{width:48px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.abc-table td:last-child{width:105px;white-space:nowrap}
+.abc-priority{display:inline-block;min-width:28px;text-align:center;border-radius:5px;padding:2px 7px;font-weight:700}
+.abc-priority.a{background:#174b30;color:#8de0ad}.abc-priority.b{background:#594515;color:#f4d27b}.abc-priority.c{background:#393939;color:#ccc}
+.abc-footnote{font-size:.76rem;color:var(--text-secondary);margin-top:9px}
+@media(max-width:768px){.abc-summary{align-items:flex-start;flex-direction:column}.abc-table-wrap{max-height:65vh}.abc-table{font-size:.8rem}.abc-table th,.abc-table td{padding:7px 8px}}
