@@ -126,6 +126,69 @@ class DataManager {
                     data.subjects.Audit = migratedAudit;
                 }
 
+
+                // Migrate the previous 36-chapter IDT tracker to the visible
+                // 65-part GST/Customs schedule. Each visible part receives an
+                // equal share of the 125-hour batch estimate.
+                const savedIDT = data.subjects?.IDT || [];
+                const plannerIDT = initialData.subjects?.IDT || [];
+                const isLegacyIDT = savedIDT.length === 36 && plannerIDT.length === 65;
+
+                if (isLegacyIDT) {
+                    const idtTopicMap = [
+                        [/Basics Concepts|Concept of Supply/i, ['01','02']],
+                        [/Reverse Charge|ECO/i, ['05','06']],
+                        [/Composition Scheme/i, ['07']],
+                        [/Exemptions under GST/i, ['03','04','05']],
+                        [/Time of Supply/i, ['014']],
+                        [/Value of Supply/i, ['07','08','09']],
+                        [/Input Tax Credit/i, ['10','011','012']],
+                        [/Place of Supply/i, ['013','014']],
+                        [/Payment of Tax|TDS|TCS/i, ['06','014']],
+                        [/Registration/i, ['015']],
+                        [/Tax Invoice/i, ['015']],
+                        [/Accounts, Records|Eway Bill/i, ['016']],
+                        [/Returns/i, ['016']],
+                        [/Jobwork/i, ['05']],
+                        [/Assessment|Audit/i, ['017']],
+                        [/Refund/i, ['017','021']],
+                        [/Advance Ruling/i, ['019']],
+                        [/Inspection|Search|Seizure|Arrest/i, ['017']],
+                        [/Demand|Recovery/i, ['018']],
+                        [/Liability to pay/i, ['06']],
+                        [/Offences|Penalties|Prosecution/i, ['018']],
+                        [/Appeals|Revision/i, ['017','018']],
+                        [/Miscellaneous/i, ['019']],
+                        [/Constitutional Provision|Levy of Customs/i, ['019']],
+                        [/Importation|Exportation Procedure/i, ['020']],
+                        [/Rate|Tariff Value|Assessment|ACDs/i, ['020']],
+                        [/Valuation/i, ['020']],
+                        [/Concessions/i, ['021']],
+                        [/Post, Courier|Stores|Baggage/i, ['020','021']],
+                        [/Warehousing/i, ['021']],
+                        [/Customs Tariff Act/i, ['020']],
+                        [/Customs.*Audit|Audit.*Refund/i, ['021']],
+                        [/Import of Goods at Concessional/i, ['021']],
+                        [/Foreign Trade Policy|FTP/i, ['022']]
+                    ];
+
+                    const migratedIDT = plannerIDT.map(chapter => ({ ...chapter }));
+                    savedIDT.forEach(oldChapter => {
+                        const rule = idtTopicMap.find(([pattern]) => pattern.test(oldChapter.topic || ''));
+                        if (!rule) return;
+                        const targetCodes = rule[1];
+                        migratedIDT.forEach(next => {
+                            const code = String(next.topic || '').split(' ')[0];
+                            if (!targetCodes.includes(code)) return;
+                            ['status','selfStudy','rev1','rev2','rev3'].forEach(field => {
+                                if (oldChapter[field] && oldChapter[field] !== 'Pending') next[field] = oldChapter[field];
+                            });
+                            if (oldChapter.notes) next.notes = oldChapter.notes;
+                        });
+                    });
+                    data.subjects.IDT = migratedIDT;
+                }
+
                 localStorage.setItem(this.storageKey, JSON.stringify(data));
                 return data;
             } catch (e) {
