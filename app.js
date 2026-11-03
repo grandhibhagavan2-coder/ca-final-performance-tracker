@@ -1,3 +1,41 @@
+const IS_VIEWER_MODE = new URLSearchParams(window.location.search).get('viewer') === '1';
+
+if (IS_VIEWER_MODE) {
+    document.documentElement.classList.add('viewer-mode');
+    const lockViewerControls = (root = document) => {
+        root.querySelectorAll('input, select, textarea, button').forEach(control => {
+            control.disabled = true;
+            control.setAttribute('aria-disabled', 'true');
+            control.setAttribute('tabindex', '-1');
+        });
+    };
+    lockViewerControls();
+    new MutationObserver(records => records.forEach(record => {
+        record.addedNodes.forEach(node => {
+            if (node.nodeType === 1) {
+                if (node.matches?.('input, select, textarea, button')) {
+                    node.disabled = true;
+                    node.setAttribute('aria-disabled', 'true');
+                    node.setAttribute('tabindex', '-1');
+                }
+                lockViewerControls(node);
+            }
+        });
+    })).observe(document.documentElement, { childList: true, subtree: true });
+
+    const blockEdits = event => {
+        if (event.target.closest('.nav-links li')) return;
+        if (event.target.closest('button, input, select, textarea, form, [data-go]')) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+        }
+    };
+    ['click', 'input', 'beforeinput', 'change', 'submit'].forEach(type => {
+        document.addEventListener(type, blockEdits, true);
+    });
+}
+
 function escapeHtml(value) {
     return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","\'":"&#39;"}[ch]));
 }
@@ -10,7 +48,7 @@ class DataManager {
     }
 
     loadData() {
-        const stored = localStorage.getItem(this.storageKey);
+        if (IS_VIEWER_MODE) return this.getDefaultData();\n        const stored = localStorage.getItem(this.storageKey);
         if (stored) {
             try {
                 const data = JSON.parse(stored);
@@ -199,7 +237,7 @@ class DataManager {
                     data.subjects.IDT = migratedIDT;
                 }
 
-                localStorage.setItem(this.storageKey, JSON.stringify(data));
+                if (!IS_VIEWER_MODE) localStorage.setItem(this.storageKey, JSON.stringify(data));
                 return data;
             } catch (e) {
                 console.error("Saved tracker data is corrupted; refusing to overwrite it.", e);
@@ -486,7 +524,7 @@ function renderNotebookExtras() {
     document.getElementById('dash-rev1-bar').style.width = p1 + '%';
     document.getElementById('dash-rev2-bar').style.width = p2 + '%';
 
-    const savedTargets = JSON.parse(localStorage.getItem('caFinalDashboardTargets') || '{}');
+    const savedTargets = IS_VIEWER_MODE ? {} : JSON.parse(localStorage.getItem('caFinalDashboardTargets') || '{}');
     document.querySelectorAll('[data-dash-target]').forEach(input => {
         input.checked = !!savedTargets[input.dataset.dashTarget];
         input.onchange = () => {
