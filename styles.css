@@ -829,3 +829,6 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(117,85,207,.18);b
  #dashboard .subjects-grid>.subject-note-card:nth-child(7){grid-column:span 1}
  .notebook-lower-grid{grid-template-columns:1fr}
 }
+
+/* Keep the full character artwork visible so the face is not cropped */
+#dashboard .ayanokoji-portrait{object-fit:contain!important;object-position:center bottom!important;mix-blend-mode:multiply}
