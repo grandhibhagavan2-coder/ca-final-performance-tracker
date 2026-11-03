@@ -752,3 +752,80 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(117,85,207,.18);b
 @media(max-width:1150px){#dashboard .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard .study-card{grid-column:1/-1}#dashboard .subjects-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.notebook-lower-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){#dashboard .notebook-hero{grid-template-columns:1fr 130px;gap:6px}#dashboard .ayanokoji-quote{grid-column:1/-1;grid-row:2;text-align:left;white-space:normal}#dashboard .ayanokoji-portrait{grid-column:2;grid-row:1;width:130px;height:110px}#dashboard .dashboard-grid{grid-template-columns:1fr}#dashboard .study-card{grid-column:auto}#dashboard .subjects-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.notebook-lower-grid{grid-template-columns:1fr}}
 @media(max-width:430px){#dashboard .subjects-grid{grid-template-columns:1fr}}
+
+
+/* ── Reference-match pass: compact, full-page notebook dashboard ── */
+#dashboard{padding-top:0}
+#dashboard .notebook-hero{
+  min-height:126px;grid-template-columns:minmax(280px,1fr) minmax(245px,auto) 245px;
+  gap:10px;padding:2px 0 10px;margin-bottom:14px;border-bottom:0;
+}
+#dashboard .notebook-hero-copy{position:relative;padding-left:148px;min-height:105px;display:flex;flex-direction:column;justify-content:center}
+#dashboard .notebook-logo-sticker{
+  position:absolute;left:0;top:12px;width:128px;height:76px;display:flex;align-items:center;justify-content:center;
+  text-align:center;background:#f8c9c6;border:2px dashed #d68b88;border-radius:7px;
+  color:#172039;font:800 1.28rem/1.05 'Space Grotesk',sans-serif;transform:rotate(-3deg);
+  box-shadow:2px 3px 0 rgba(60,45,45,.12)
+}
+#dashboard .notebook-eyebrow{font-size:.62rem}
+#dashboard .notebook-hero h1{font-size:clamp(2.2rem,3.4vw,3.35rem);line-height:1.02}
+#dashboard .notebook-hero h1:after{width:190px;height:7px}
+#dashboard .notebook-hero p{font-size:.94rem;margin-top:6px}
+#dashboard .ayanokoji-quote{font-size:1.15rem;white-space:normal;min-width:245px;padding:9px 12px}
+#dashboard .ayanokoji-portrait{
+ width:245px;height:142px;object-fit:cover;object-position:center 18%;
+ border-radius:0;background:transparent;mix-blend-mode:multiply;
+ mask-image:linear-gradient(to bottom,#000 84%,transparent 100%)
+}
+#dashboard .dashboard-grid{grid-template-columns:1.15fr 1fr 1.05fr;gap:14px;margin-top:4px}
+#dashboard .dashboard-grid>.card{min-height:166px;padding:13px 16px;border-radius:11px}
+#dashboard .card h3{font-size:1.02rem;padding-bottom:7px;margin-bottom:7px}
+#dashboard .progress-circle-container{height:112px}
+#dashboard .circular-chart{max-height:112px}
+#dashboard .stat-row{padding:3px 0;font-size:.84rem}
+#dashboard .subjects-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px 12px}
+#dashboard .subjects-grid>div[style*="grid-column"]{
+ grid-column:1/-1!important;display:flex;align-items:center;gap:10px;
+ margin:8px 0 0!important;padding:0 12px 5px!important;border-bottom:1.5px solid #bca9ee;
+ position:relative
+}
+#dashboard .subjects-grid>div[style*="grid-column"] h3{font-size:1rem;padding:3px 12px}
+#dashboard .subjects-grid>div[style*="grid-column"] p{font-size:.74rem;margin:0!important}
+#dashboard .subjects-grid>.subject-note-card{grid-column:span 2;padding:9px 12px!important;min-height:110px}
+#dashboard .subjects-grid>.subject-note-card h4{font-size:1rem;margin-bottom:3px}
+#dashboard .subjects-grid>.subject-note-card .progress-bar-container{height:7px;margin:5px 0!important}
+#dashboard .subjects-grid>.subject-note-card .stat-row{font-size:.73rem;padding:1px 0;line-height:1.35}
+#dashboard .subjects-grid>.subject-note-card .stat-label{color:#425168}
+#dashboard .subjects-grid>.subject-note-card .stat-value{font-size:.75rem}
+#dashboard .subjects-grid>.subject-note-card:nth-child(6),
+#dashboard .subjects-grid>.subject-note-card:nth-child(7){grid-column:span 3}
+#dashboard .subjects-grid>.subject-note-card{box-shadow:none;border-color:#c8bde1}
+#dashboard>h3{margin:10px 0 4px;padding:4px 12px;font-size:1.02rem}
+.notebook-lower-grid{grid-template-columns:1fr 1.12fr 1fr 1.18fr;gap:12px;margin-top:14px}
+.note-card{padding:10px 13px;min-height:146px}
+.note-card h3{font-size:.9rem;padding-bottom:6px;margin-bottom:7px}
+.notebook-action{padding:5px 3px;font-size:.76rem}
+.revision-line{font-size:.76rem;margin:5px 0 3px}
+.mini-track{height:7px;margin-bottom:7px}
+.target-line{font-size:.74rem;padding:3px 0}
+#dashboard-notes{height:68px;min-height:68px;line-height:21px;font-size:.75rem}
+.note-small{font-size:.62rem;margin-top:4px}
+@media(max-width:1150px){
+ #dashboard .notebook-hero{grid-template-columns:1fr 190px}
+ #dashboard .ayanokoji-quote{grid-column:1;grid-row:2}
+ #dashboard .ayanokoji-portrait{grid-column:2;grid-row:1/3;width:190px}
+ #dashboard .subjects-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+ .notebook-lower-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ #dashboard .notebook-hero{grid-template-columns:1fr 110px}
+ #dashboard .notebook-hero-copy{padding-left:0;padding-top:75px}
+ #dashboard .notebook-logo-sticker{top:0;width:100px;height:60px;font-size:1rem}
+ #dashboard .ayanokoji-portrait{width:110px;height:100px}
+ #dashboard .dashboard-grid{grid-template-columns:1fr}
+ #dashboard .subjects-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #dashboard .subjects-grid>.subject-note-card,
+ #dashboard .subjects-grid>.subject-note-card:nth-child(6),
+ #dashboard .subjects-grid>.subject-note-card:nth-child(7){grid-column:span 1}
+ .notebook-lower-grid{grid-template-columns:1fr}
+}
