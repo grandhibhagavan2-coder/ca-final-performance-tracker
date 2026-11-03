@@ -48,7 +48,8 @@ class DataManager {
     }
 
     loadData() {
-        if (IS_VIEWER_MODE) return this.getDefaultData();\n        const stored = localStorage.getItem(this.storageKey);
+        if (IS_VIEWER_MODE) return this.getDefaultData();
+        const stored = localStorage.getItem(this.storageKey);
         if (stored) {
             try {
                 const data = JSON.parse(stored);
@@ -255,6 +256,7 @@ class DataManager {
     }
 
     saveData() {
+        if (IS_VIEWER_MODE) return;
         localStorage.setItem(this.storageKey, JSON.stringify(this.data));
     }
 
@@ -332,10 +334,12 @@ let abcSelectedSubject = 'FR';
 let abcSelectedCategory = 'A';
 const abcProgressKey = 'caFinalABCProgress';
 function getABCProgress() {
+    if (IS_VIEWER_MODE) return {};
     try { return JSON.parse(localStorage.getItem(abcProgressKey) || '{}'); }
     catch (e) { return {}; }
 }
 function saveABCProgress(key, field, value) {
+    if (IS_VIEWER_MODE) return;
     const progress = getABCProgress();
     progress[key] = { ...(progress[key] || {}), [field]: value };
     localStorage.setItem(abcProgressKey, JSON.stringify(progress));
@@ -527,15 +531,15 @@ function renderNotebookExtras() {
     const savedTargets = IS_VIEWER_MODE ? {} : JSON.parse(localStorage.getItem('caFinalDashboardTargets') || '{}');
     document.querySelectorAll('[data-dash-target]').forEach(input => {
         input.checked = !!savedTargets[input.dataset.dashTarget];
-        input.onchange = () => {
+        input.onchange = IS_VIEWER_MODE ? null : () => {
             const next = JSON.parse(localStorage.getItem('caFinalDashboardTargets') || '{}');
             next[input.dataset.dashTarget] = input.checked;
             localStorage.setItem('caFinalDashboardTargets', JSON.stringify(next));
         };
     });
     const notes = document.getElementById('dashboard-notes');
-    notes.value = localStorage.getItem('caFinalDashboardNotes') || '';
-    notes.oninput = () => {
+    notes.value = IS_VIEWER_MODE ? '' : (localStorage.getItem('caFinalDashboardNotes') || '');
+    notes.oninput = IS_VIEWER_MODE ? null : () => {
         localStorage.setItem('caFinalDashboardNotes', notes.value);
         document.getElementById('dashboard-notes-status').textContent = 'Saved';
     };
