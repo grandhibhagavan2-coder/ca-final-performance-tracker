@@ -457,23 +457,14 @@ function renderDashboard() {
                 subject === 'IDT' ? 'Approx. 120 hrs' : `${Math.round(totalHours)} hrs from chapter data`;
 
             grid.innerHTML += `
-                <div class="card">
+                <div class="card subject-note-card subject-${subject.toLowerCase()}">
                     <h4>${subject}</h4>
-                    <div class="progress-bar-container mt-2 mb-2" style="background-color:#444;">
+                    <div class="progress-bar-container mt-2 mb-2">
                         <div class="progress-bar" style="width:${pctVal}%"></div>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Class completion:</span>
-                        <span class="stat-value">${pctVal}%</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Planned duration:</span>
-                        <span class="stat-value">${plannedLabel}</span>
-                    </div>
-                    ${totalHours > 0 ? `<div class="stat-row">
-                        <span class="stat-label">Completed class hours:</span>
-                        <span class="stat-value">${Math.round(completedHours)} / ${Math.round(totalHours)} hrs</span>
-                    </div>` : ''}
+                    <div class="stat-row"><span class="stat-label">Planned Duration</span><span class="stat-value">${plannedLabel}</span></div>
+                    <div class="stat-row"><span class="stat-label">Completed Hours</span><span class="stat-value">${Math.round(completedHours)} / ${Math.round(totalHours || (subject === 'DT' ? 253 : subject === 'IDT' ? 125 : 0))} hrs</span></div>
+                    <div class="stat-row"><span class="stat-label">Class Completion</span><span class="stat-value">${pctVal}%</span></div>
                 </div>
             `;
         });
