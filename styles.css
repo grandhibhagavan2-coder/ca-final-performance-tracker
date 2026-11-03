@@ -832,3 +832,17 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(117,85,207,.18);b
 
 /* Keep the full character artwork visible so the face is not cropped */
 #dashboard .ayanokoji-portrait{object-fit:contain!important;object-position:center bottom!important;mix-blend-mode:multiply}
+
+
+/* Read-only share link state */
+.viewer-mode-banner{display:none}
+.viewer-mode .viewer-mode-banner{
+ display:block;margin:0 0 14px;padding:9px 14px;border:1px solid #c8b7ec;border-radius:9px;
+ background:linear-gradient(90deg,#eee6ff,#fff3d4);color:#4f3b83;
+ font:700 .76rem 'Inter',sans-serif;letter-spacing:.04em;text-align:center
+}
+.viewer-mode input:disabled,.viewer-mode select:disabled,.viewer-mode textarea:disabled{
+ opacity:.88;cursor:not-allowed
+}
+.viewer-mode button:disabled{opacity:.55;cursor:not-allowed}
+.viewer-mode .note-card textarea:disabled{color:#344054}
