@@ -936,7 +936,7 @@ function saveDailyRevisionState(state){localStorage.setItem(DAILY_REVISION_KEY,J
 function buildDailyRevisionPlan(){
     const host=document.getElementById('daily-revision-plan');
     const summary=document.getElementById('daily-revision-summary');
-    if(!host||!summary||!window.abcAnalysisData)return;
+    if(!host||!summary||typeof abcAnalysisData === 'undefined')return;
     const state=getDailyRevisionState();
     const start=document.getElementById('revision-start-date').value||'2026-11-13';
     const mode=document.getElementById('revision-subject-mode').value||'one';
