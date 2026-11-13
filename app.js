@@ -955,9 +955,9 @@ function buildDailyRevisionPlan(){
     DAILY_REVISION_CATEGORIES.forEach(category=>{
         const queues={};
         DAILY_REVISION_SUBJECTS.forEach(subject=>{
-            queues[subject]=(abcAnalysisData[subject]?.categories?.[category]||[]).map(topic=>({
-                subject,category,topic,key:subject+'::'+category+'::'+topic
-            }));
+            queues[subject]=(abcAnalysisData[subject]?.categories?.[category]||[])
+                .map(topic=>({subject,category,topic,key:subject+'::'+category+'::'+topic}))
+                .filter(item=>!DAILY_REVISION_PRECOMPLETED.includes(item.key));
         });
         let hasItems=true;
         while(hasItems){
@@ -976,8 +976,8 @@ function buildDailyRevisionPlan(){
         return {...item,date:date.toISOString().slice(0,10),day:index+1};
     });
     const pending=cards.filter(item=>!state.done[item.key]).length;
-    const completed=cards.length-pending;
-    summary.innerHTML='<div class="daily-stat"><b>'+cards.length+'</b><span>Total lesson-days</span></div><div class="daily-stat"><b>'+completed+'</b><span>Completed (including confirmed FR lessons)</span></div><div class="daily-stat"><b>'+pending+'</b><span>Lessons remaining</span></div>';
+    const completed=cards.length-pending+DAILY_REVISION_PRECOMPLETED.length;
+    summary.innerHTML='<div class="daily-stat"><b>'+cards.length+'</b><span>Scheduled lesson-days</span></div><div class="daily-stat"><b>'+completed+'</b><span>Completed lessons</span></div><div class="daily-stat"><b>'+pending+'</b><span>Lessons remaining</span></div>';
     host.innerHTML=cards.map(item=>{
         const date=new Date(item.date+'T12:00:00');
         const label=date.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
