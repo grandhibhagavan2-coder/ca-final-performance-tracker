@@ -929,7 +929,7 @@ function renderTestPapers() {
 
 // Daily ABC Revision Planner — 3 focused hours, starting from the selected date.
 const DAILY_REVISION_KEY = 'caFinalDailyABCRevisionV1';
-const DAILY_REVISION_SUBJECTS = ['FR','AFM','IDT'];
+const DAILY_REVISION_SUBJECTS = ['FR','AFM'];
 const DAILY_REVISION_CATEGORIES = ['A','B','C'];
 const DAILY_REVISION_PRECOMPLETED = [
     'FR::A::Ind AS 102 — Share Based Payment',
