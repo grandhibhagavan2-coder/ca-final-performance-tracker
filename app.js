@@ -930,74 +930,82 @@ function renderTestPapers() {
 // Daily ABC Revision Planner — 3 focused hours, starting from the selected date.
 const DAILY_REVISION_KEY = 'caFinalDailyABCRevisionV1';
 const DAILY_REVISION_SUBJECTS = ['FR','AFM','IDT'];
-const DAILY_REVISION_MINUTES = {A:50,B:35,C:20};
+const DAILY_REVISION_CATEGORIES = ['A','B','C'];
+const DAILY_REVISION_PRECOMPLETED = [
+    'FR::A::Ind AS 102 — Share Based Payment',
+    'FR::A::Ind AS 115 — Revenue from Contracts with Customers'
+];
 function getDailyRevisionState(){
-    try{return JSON.parse(localStorage.getItem(DAILY_REVISION_KEY)||'{"done":{},"start":"2026-11-13","mode":"one"}');}
-    catch(e){return {done:{},start:'2026-11-13',mode:'one'};}
+    try{
+        const saved=JSON.parse(localStorage.getItem(DAILY_REVISION_KEY)||'{}');
+        return {done:{...(saved.done||{})},start:saved.start||'2026-11-13'};
+    }catch(e){return {done:{},start:'2026-11-13'};}
 }
 function saveDailyRevisionState(state){localStorage.setItem(DAILY_REVISION_KEY,JSON.stringify(state));}
 function buildDailyRevisionPlan(){
     const host=document.getElementById('daily-revision-plan');
     const summary=document.getElementById('daily-revision-summary');
-    if(!host||!summary||typeof abcAnalysisData === 'undefined')return;
+    const startInput=document.getElementById('revision-start-date');
+    if(!host||!summary||!startInput||typeof abcAnalysisData==='undefined')return;
     const state=getDailyRevisionState();
-    const start=document.getElementById('revision-start-date').value||'2026-11-13';
-    const mode=document.getElementById('revision-subject-mode').value||'one';
-    state.start=start;state.mode=mode;
-    const queues={};
-    DAILY_REVISION_SUBJECTS.forEach(subject=>{
-        queues[subject]=[];
-        ['A','B','C'].forEach(category=>(abcAnalysisData[subject].categories[category]||[]).forEach(topic=>{
-            const key=subject+'::'+category+'::'+topic;
-            if(!state.done[key])queues[subject].push({subject,category,topic,key,minutes:DAILY_REVISION_MINUTES[category]});
-        }));
+    DAILY_REVISION_PRECOMPLETED.forEach(key=>{if(!state.done[key])state.done[key]='2026-11-13';});
+    const start=startInput.value||'2026-11-13';
+    state.start=start;
+    const schedule=[];
+    DAILY_REVISION_CATEGORIES.forEach(category=>{
+        const queues={};
+        DAILY_REVISION_SUBJECTS.forEach(subject=>{
+            queues[subject]=(abcAnalysisData[subject]?.categories?.[category]||[]).map(topic=>({
+                subject,category,topic,key:subject+'::'+category+'::'+topic
+            }));
+        });
+        let hasItems=true;
+        while(hasItems){
+            hasItems=false;
+            DAILY_REVISION_SUBJECTS.forEach(subject=>{
+                if(queues[subject].length){
+                    schedule.push(queues[subject].shift());
+                    hasItems=true;
+                }
+            });
+        }
     });
-    const totalRemaining=Object.values(queues).reduce((n,q)=>n+q.length,0);
-    const cards=[];
-    let day=0,guard=0;
-    while(Object.values(queues).some(q=>q.length)&&guard<240){
-        const date=new Date(start+'T12:00:00');date.setDate(date.getDate()+day);
-        const dateStr=date.toISOString().slice(0,10);
-        const primary=DAILY_REVISION_SUBJECTS[day%DAILY_REVISION_SUBJECTS.length];
-        const selected=[];
-        let used=0;
-        const takeFrom=(subject,limit)=>{
-            const q=queues[subject];
-            while(q.length&&used+q[0].minutes<=limit){
-                const item=q.shift();selected.push(item);used+=item.minutes;
-            }
-        };
-        takeFrom(primary,180);
-        if(mode==='split'&&used<120){
-            const secondary=DAILY_REVISION_SUBJECTS[(day+1)%DAILY_REVISION_SUBJECTS.length];
-            takeFrom(secondary,180);
-        }
-        if(!selected.length){
-            const next=DAILY_REVISION_SUBJECTS.find(s=>queues[s].length);
-            if(!next)break;
-            const item=queues[next].shift();selected.push(item);used=item.minutes;
-        }
-        cards.push({date:dateStr,subjectNames:[...new Set(selected.map(x=>x.subject))],items:selected,used});
-        day++;guard++;
-    }
-    const allItems=cards.flatMap(c=>c.items);
-    const totalMinutes=allItems.reduce((n,x)=>n+x.minutes,0);
-    summary.innerHTML='<div class="daily-stat"><b>'+cards.length+'</b><span>Planned study days</span></div><div class="daily-stat"><b>'+totalRemaining+'</b><span>Chapters pending at plan build</span></div><div class="daily-stat"><b>'+Math.round(totalMinutes/60*10)/10+'h</b><span>Estimated revision workload</span></div>';
-    host.innerHTML=cards.map((card,index)=>{
-        const date=new Date(card.date+'T12:00:00');
+    const cards=schedule.map((item,index)=>{
+        const date=new Date(start+'T12:00:00');
+        date.setDate(date.getDate()+index);
+        return {...item,date:date.toISOString().slice(0,10),day:index+1};
+    });
+    const pending=cards.filter(item=>!state.done[item.key]).length;
+    const completed=cards.length-pending;
+    summary.innerHTML='<div class="daily-stat"><b>'+cards.length+'</b><span>Total lesson-days</span></div><div class="daily-stat"><b>'+completed+'</b><span>Completed (including confirmed FR lessons)</span></div><div class="daily-stat"><b>'+pending+'</b><span>Lessons remaining</span></div>';
+    host.innerHTML=cards.map(item=>{
+        const date=new Date(item.date+'T12:00:00');
         const label=date.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-        const rows=card.items.map(item=>'<label class="daily-revision-item"><input type="checkbox" data-revision-key="'+encodeURIComponent(item.key)+'" '+(state.done[item.key]?'checked':'')+'><span><b>'+item.category+' · '+item.subject+'</b><span>'+escapeHtml(item.topic)+'</span></span><strong>'+item.minutes+' min</strong></label>').join('');
-        return '<article class="daily-day-card"><div class="daily-day-head"><div><span>DAY '+(index+1)+'</span><h3>'+label+'</h3><small>'+card.subjectNames.join(' + ')+'</small></div><strong>'+Math.floor(card.used/60)+'h '+(card.used%60)+'m</strong></div><div class="daily-day-items">'+rows+'</div><div class="daily-day-footer">Remaining time: '+(180-card.used)+' min · Use for error correction / timed recall, not extra chapters.</div></article>';
+        const done=!!state.done[item.key];
+        const guidance= item.category==='A'
+            ? 'Deep revision: concepts, full illustrations, question practice and closed-book recall.'
+            : item.category==='B'
+                ? 'Focused revision: core concepts, selected questions and closed-book recall.'
+                : 'Compact revision: key points, essential questions and quick recall.';
+        return '<article class="daily-day-card'+(done?' is-complete':'')+'"><div class="daily-day-head"><div><span>DAY '+item.day+' · CATEGORY '+item.category+'</span><h3>'+label+'</h3><small>'+item.subject+'</small></div><strong>3 hours</strong></div><div class="daily-day-items"><label class="daily-revision-item"><input type="checkbox" data-revision-key="'+encodeURIComponent(item.key)+'" '+(done?'checked':'')+'><span><b>'+item.category+' · '+item.subject+'</b><span>'+escapeHtml(item.topic)+'</span><small>'+guidance+'</small></span><strong>'+(done?'Done':'One lesson')+'</strong></label></div><div class="daily-day-footer">Use the full 3-hour block for this lesson only. Do not add another chapter or split this lesson across subjects.</div></article>';
     }).join('');
-    host.querySelectorAll('[data-revision-key]').forEach(input=>input.addEventListener('change',()=>{
+    host.querySelectorAll('[data-revision-key]').forEach(input=>input.onchange=()=>{
         const key=decodeURIComponent(input.dataset.revisionKey);
         const current=getDailyRevisionState();
-        if(input.checked)current.done[key]=new Date().toISOString().slice(0,10);else delete current.done[key];
-        saveDailyRevisionState(current);buildDailyRevisionPlan();
-    }));
+        if(input.checked)current.done[key]=new Date().toISOString().slice(0,10);
+        else if(!DAILY_REVISION_PRECOMPLETED.includes(key))delete current.done[key];
+        buildDailyRevisionPlan();
+    });
     saveDailyRevisionState(state);
 }
 function renderDailyRevision(){
+    const state=getDailyRevisionState();
+    const start=document.getElementById('revision-start-date');
+    if(!start)return;
+    start.value=state.start||'2026-11-13';
+    start.onchange=buildDailyRevisionPlan;
+    buildDailyRevisionPlan();
+}
     const state=getDailyRevisionState();
     const start=document.getElementById('revision-start-date');
     const mode=document.getElementById('revision-subject-mode');
