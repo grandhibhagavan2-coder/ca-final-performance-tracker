@@ -846,3 +846,29 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(117,85,207,.18);b
 }
 .viewer-mode button:disabled{opacity:.55;cursor:not-allowed}
 .viewer-mode .note-card textarea:disabled{color:#344054}
+
+/* Daily ABC revision planner */
+.daily-revision-controls{display:flex;align-items:end;gap:14px;flex-wrap:wrap;padding:16px;background:#fffdf7;border:1px solid #d9d2c4;border-radius:10px;margin-bottom:14px}
+.daily-revision-controls>div{display:flex;flex-direction:column;gap:5px;min-width:190px}
+.daily-revision-controls label{font-size:.76rem;font-weight:700;color:#566477}
+.daily-revision-controls input,.daily-revision-controls select{padding:9px;min-height:39px}
+.daily-revision-rule{padding:13px 15px;background:#fff1c9;border:1px solid #e6d58c;border-radius:9px;font-size:.84rem;margin-bottom:14px}
+.daily-revision-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}
+.daily-stat{padding:14px;background:#fffdf7;border:1px solid #d9d2c4;border-radius:10px}
+.daily-stat b{display:block;font:700 1.4rem 'Space Grotesk',sans-serif;color:#7555cf}
+.daily-stat span{font-size:.76rem;color:#667487}
+.daily-revision-plan{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.daily-day-card{background:#fffdf7;border:1px solid #d9d2c4;border-radius:11px;padding:14px;box-shadow:2px 3px 0 rgba(69,62,48,.06);min-width:0}
+.daily-day-head{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid #e8e2d7;padding-bottom:10px;margin-bottom:8px}
+.daily-day-head span{font-size:.65rem;letter-spacing:.1em;color:#8a7b6a;font-weight:800}
+.daily-day-head h3{margin:2px 0;font:700 1rem 'Space Grotesk',sans-serif}
+.daily-day-head small{color:#7555cf;font-weight:700}
+.daily-day-head>strong{white-space:nowrap;background:#e8e0fb;padding:6px 9px;border-radius:8px;font-size:.8rem}
+.daily-revision-item{display:flex;align-items:center;gap:9px;padding:9px 2px;border-bottom:1px dashed #e3ddd2;cursor:pointer}
+.daily-revision-item input{accent-color:#7555cf;width:16px;height:16px;flex:none}
+.daily-revision-item>span{display:flex;flex-direction:column;min-width:0;flex:1}
+.daily-revision-item>span b{font-size:.7rem;color:#7555cf}
+.daily-revision-item>span span{font-size:.8rem;line-height:1.35}
+.daily-revision-item>strong{font-size:.76rem;white-space:nowrap}
+.daily-day-footer{font-size:.7rem;color:#778397;padding-top:9px}
+@media(max-width:760px){.daily-revision-plan{grid-template-columns:1fr}.daily-revision-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
