@@ -310,6 +310,8 @@ document.addEventListener('DOMContentLoaded', () => {
             sections.forEach(sec => sec.classList.remove('active'));
             document.getElementById('subject-views-container').innerHTML = '';
 
+            if (!targetId) return;
+
             if (targetId.startsWith('subject-')) {
                 const subject = targetId.replace('subject-', '');
                 renderSubjectView(subject);
@@ -320,6 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (targetId === 'dashboard') renderDashboard();
             if (targetId === 'abc-analysis') renderABCAnalysis();
+            if (targetId === 'daily-revision') renderDailyRevision();
             if (targetId === 'study-log') renderStudyLog();
             if (targetId === 'test-papers') renderTestPapers();
         });
@@ -1005,7 +1008,3 @@ function renderDailyRevision(){
     mode.addEventListener('change',buildDailyRevisionPlan);
     buildDailyRevisionPlan();
 }
-document.addEventListener('click',event=>{
-    const nav=event.target.closest('.nav-links li[data-target="daily-revision"]');
-    if(nav)setTimeout(renderDailyRevision,0);
-});
